@@ -1,7 +1,7 @@
 import pygame, sys, random
 from pygame.math import Vector2
-from pygame import surface
 
+pygame.mixer.pre_init(44100,-16,2,512) # Précharge le son pour éviter un potentiel délai
 pygame.init()
 
 clock = pygame.time.Clock()
@@ -9,11 +9,12 @@ cell_size = 40
 cell_number = 20
 screen = pygame.display.set_mode((cell_number*cell_size,cell_number*cell_size))
 apple = pygame.image.load('graphisms/apple.png').convert_alpha()
+game_font = pygame.font.Font('fonts/Marcha.ttf', 25)
 
 class SNAKE:
     def __init__(self):
         self.body = [Vector2(5,10), Vector2(4,10),Vector2(3,10)]
-        self.direction = Vector2(1,0)
+        self.direction = Vector2(0,0)
         self.new_block = False
 
         # Graphismes pour la tête du serpent
@@ -38,6 +39,8 @@ class SNAKE:
         self.body_br = pygame.image.load('graphisms/body_bottomright.png').convert_alpha()
         self.body_bl = pygame.image.load('graphisms/body_bottomleft.png').convert_alpha()
 
+        # Son quand le serpent mange une pomme
+        self.eating_sound = pygame.mixer.Sound('sounds/crack.wav')
 
     def draw_snake(self):
         self.update_head_graphisms()
@@ -87,11 +90,6 @@ class SNAKE:
         elif tail_relation == Vector2(0,1): self.tail = self.tail_up
         elif tail_relation == Vector2(0,-1): self.tail = self.tail_down
 
-
-
-
-
-
     def move_snake(self):
         if self.new_block == True:
             body_copy = self.body[:]
@@ -106,6 +104,13 @@ class SNAKE:
 
     def add_block(self):
         self.new_block = True
+
+    def play_eating_sound(self):
+        self.eating_sound.play()
+
+    def reset(self):
+        self.body = [Vector2(5,10), Vector2(4,10),Vector2(3,10)]
+        self.direction = Vector2(0,0)
 
 class FRUIT:
     def __init__(self):
@@ -134,15 +139,24 @@ class MAIN:
         self.check_fail()
 
     def draw_elements(self):
+        self.grass()
+        self.score()
         self.snake.draw_snake()
         self.fruit.draw_fruit()
     
     def check_collision(self):
         if self.fruit.pos == self.snake.body[0]: #Si le fruit et la tête du serpent sont à la même position
+            # bruitage
+            self.snake.play_eating_sound()
             # replacer un fruit ailleurs
             self.fruit.randomize()
             # rendre le serpent plus grand
             self.snake.add_block()
+        
+        # empêcher le fruit d'apparaitre sur le serpent
+        for block in self.snake.body[1:]:
+            if block == self.fruit.pos:
+                self.fruit.randomize()
     
     def check_fail(self):
         #Si snake est en dehors de l'écran
@@ -153,9 +167,36 @@ class MAIN:
             if block == self.snake.body[0]:
                 self.game_over()
 
-    def game_over():
-        pygame.quit()
-        sys.exit()
+    def game_over(self):
+        self.snake.reset()
+    
+    def grass(self):
+        grass_color = (167,209,61)
+        for row in range(cell_number):
+            if row % 2 == 0:
+                for col in range(cell_number):
+                    if col % 2 == 0:
+                        grass_rect = pygame.Rect(col*cell_size,row*cell_size,cell_size,cell_size)
+                        pygame.draw.rect(screen, grass_color, grass_rect)
+            else:
+                for col in range(cell_number):
+                    if col % 2 != 0:
+                        grass_rect = pygame.Rect(col*cell_size,row*cell_size,cell_size,cell_size)
+                        pygame.draw.rect(screen, grass_color, grass_rect)
+    
+    def score(self):
+        score_text = str(len(self.snake.body) - 3)
+        score_surface = game_font.render(score_text, True, (56,74,12))
+        score_x = int(cell_size * cell_number - 60)
+        score_y = int(cell_size * cell_number - 40)
+        score_rect = score_surface.get_rect(center = (score_x, score_y))
+        apple_rect = apple.get_rect(midright = (score_rect.left, score_rect.centery))
+        bg_rect = pygame.Rect(apple_rect.left, apple_rect.top,apple_rect.width + score_rect.width + 8 ,apple_rect.height + 4)
+
+        pygame.draw.rect(screen,(167,209,61),bg_rect)
+        screen.blit(score_surface, score_rect)
+        screen.blit(apple, apple_rect)
+        pygame.draw.rect(screen,(56,74,12),bg_rect,2)
 
 main_game = MAIN()
 
