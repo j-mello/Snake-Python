@@ -1,7 +1,9 @@
-from init import screen, game_font, cell_number, cell_size, fruit_icon, grass_color, score_color, pygame, default_length_snake, fruit_group_id, snake_group_id, wall_group_id, nb_random_walls, use_tonic_grills
+from init import screen, game_font, cell_number, cell_size, fruit_icon, grass_color, score_color, pygame, default_length_snake, fruit_group_id, snake_group_id, wall_group_id, wormhole_group_id, nb_random_walls, nb_wormholes, use_tonic_grills
 from FRUIT import FRUIT
 from WALL import WALL
 from TONIC_GRILL import TONIC_GRILL
+from WORMHOLE import WORMHOLE
+
 from pygame.math import Vector2
 import random
 
@@ -33,6 +35,13 @@ class PARTY:
             wall.place_randomly()
             self.elements.append(wall)
 
+        for id in range(nb_wormholes):
+            wormhole = WORMHOLE()
+            wormhole.set_id(id)
+            wormhole.set_party(self)
+            wormhole.place_randomly()
+            self.elements.append(wormhole)
+
 
         for (id,snake) in enumerate(snakes):
             snake.set_party(self)
@@ -52,7 +61,7 @@ class PARTY:
     def reset(self):
         for element in self.elements:
             type = element.id//100*100
-            if type == snake_group_id or type == fruit_group_id or (type == wall_group_id and element.randomly == True):
+            if type == snake_group_id or type == fruit_group_id or type == wormhole_group_id or (type == wall_group_id and element.randomly == True):
                 element.reset()
                 element.place_randomly()
 

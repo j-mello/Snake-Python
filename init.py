@@ -15,9 +15,12 @@ score_color = (56,74,12)
 
 fruit_icon = pygame.image.load('graphisms/apple.png').convert_alpha()
 tonic_icon = pygame.image.load('graphisms/tonic.png').convert_alpha()
+wormhole_icon = pygame.image.load('graphisms/wormhole.png').convert_alpha()
 
 #Afficher aléatoirement des murs dans le niveau
-nb_random_walls = 10
+nb_random_walls = 5
+
+nb_wormholes = 1
 
 #Remplacer les murs des coté, par des grilles qui téléportent de l'autre coté
 use_tonic_grills = True
@@ -31,8 +34,11 @@ snake_group_id = 100
 # Les id des murs iront de 200 à 299
 wall_group_id = 200
 
+# Les ids des grilles tonique irons de 300 à 399
+tonic_group_id = 300
+
 # les ids des fruits irons de 400 à 499
 fruit_group_id = 400
 
-# Les ids des grilles tonique irons de 500 à 599
-tonic_group_id = 500
+# Les ids des trous de ver irons de 500 à 599
+wormhole_group_id = 500
