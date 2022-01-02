@@ -1,6 +1,6 @@
 import pygame
 from pygame.math import Vector2
-from init import screen, cell_size
+from init import screen, cell_size, default_length_snake
 
 class SNAKE:
     def __init__(self,UP_KEY,DOWN_KEY,RIGHT_KEY,LEFT_KEY):
@@ -11,9 +11,9 @@ class SNAKE:
             LEFT_KEY: Vector2(-1,0)
         }
 
-        self.body = [Vector2(5,10), Vector2(4,10),Vector2(3,10)]
-        self.direction = Vector2(0,0)
-        self.new_block = False
+        self.reset()
+
+        self.length = default_length_snake
 
         # Graphismes pour la tête du serpent
         self.head_up = pygame.image.load('graphisms/head_up.png').convert_alpha()
@@ -39,6 +39,16 @@ class SNAKE:
 
         # Son quand le serpent mange une pomme
         self.eating_sound = pygame.mixer.Sound('sounds/crack.wav')
+
+    def reset(self):
+        self.orientation = Vector2(0,0)
+        self.direction = Vector2(0,0)
+        self.new_block = False
+        self.body = []
+        self.collisionned_block = 0
+
+    def set_party(self,party):
+        self.party = party
 
     def draw_snake(self):
         self.update_head_graphisms()
@@ -88,14 +98,21 @@ class SNAKE:
         elif tail_relation == Vector2(0,1): self.tail = self.tail_up
         elif tail_relation == Vector2(0,-1): self.tail = self.tail_down
 
-    def move_snake(self):
+    def move_snake(self,index):
+        if self.direction == Vector2(0,0):
+            return
+
         if self.new_block == True:
             body_copy = self.body[:]
             self.new_block = False
         else:
+            self.party.tab[int(self.body[-1].y)][int(self.body[-1].x)] = 0
             body_copy = self.body[:-1]
 
         body_copy.insert(0,body_copy[0] + self.direction)
+        self.collisionned_block = self.party.tab[int(body_copy[0].y)][int(body_copy[0].x)]
+        self.party.tab[int(body_copy[0].y)][int(body_copy[0].x)] = 1
+
         self.body = body_copy[:]
 
     def add_block(self):
@@ -103,7 +120,3 @@ class SNAKE:
 
     def play_eating_sound(self):
         self.eating_sound.play()
-
-    def reset(self):
-        self.body = [Vector2(5,10), Vector2(4,10),Vector2(3,10)]
-        self.direction = Vector2(0,0)

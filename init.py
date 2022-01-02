@@ -6,6 +6,7 @@ pygame.init()
 
 cell_size = 40
 cell_number = 20
+default_length_snake = 3
 screen = pygame.display.set_mode((cell_number*cell_size,cell_number*cell_size))
 apple = pygame.image.load('graphisms/apple.png').convert_alpha()
 game_font = pygame.font.Font('fonts/Marcha.ttf', 25)

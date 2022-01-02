@@ -7,8 +7,9 @@ from pygame.math import Vector2
 clock = pygame.time.Clock()
 
 snake = SNAKE(pygame.K_UP,pygame.K_DOWN,pygame.K_RIGHT,pygame.K_LEFT)
+snake2 = SNAKE(pygame.K_z,pygame.K_s,pygame.K_d,pygame.K_q)
 
-party = PARTY(snake)
+party = PARTY([snake,snake2])
 
 SCREEN_UPDATE = pygame.USEREVENT #creation d'un event
 pygame.time.set_timer(SCREEN_UPDATE, 150) #L'event sera trigger toutes les 150 millisecondes
@@ -22,11 +23,13 @@ while True:
             pygame.quit()
             sys.exit()
         if event.type == SCREEN_UPDATE:
+            screen.fill((175,215,70))
             party.update()
             party.draw_elements()
             pygame.display.update()
         if event.type == pygame.KEYDOWN:
-            for (key,new_direction) in party.snake.KEYS.items():
-                if event.key == key and party.snake.direction != new_direction*(-1):
-                    party.snake.direction = new_direction
-    screen.fill((175,215,70))
+            for (index,snake) in enumerate(party.snakes):
+                for (key,new_direction) in snake.KEYS.items():
+                    if event.key == key and snake.orientation != new_direction*(-1):
+                        snake.direction = new_direction
+                        snake.orientation = new_direction
