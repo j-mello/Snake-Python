@@ -3,11 +3,11 @@ from ELEMENT import ELEMENT
 
 class WALL(ELEMENT):
 
-    def __init__(self, static = True,length = cell_number-1):
+    def __init__(self, randomly = False, length = cell_number-1):
         super().__init__()
-        self.static = static
         self.length = length
         self.group_id = wall_group_id
+        self.randomly = randomly
 
         self.wall = pygame.image.load('graphisms/wall.png').convert_alpha()
 

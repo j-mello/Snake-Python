@@ -46,10 +46,8 @@ class SNAKE(ELEMENT):
 
     def reset(self):
         super().reset()
-        self.orientation = Vector2(0,0)
         self.direction = Vector2(0,0)
         self.new_block = False
-        self.body = []
         self.collisionned_block = 0
 
     def draw(self):

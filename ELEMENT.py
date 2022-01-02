@@ -17,8 +17,8 @@ class ELEMENT:
         self.orientation = Vector2(0,0)
 
     def set_id(self,id):
-        if id > 9:
-            raise Exception('Id dépassant 9')
+        if id > 99:
+            raise Exception('Id dépassant 99')
         self.id = self.group_id+id
 
     def set_party(self,party):

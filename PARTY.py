@@ -1,12 +1,29 @@
-from init import screen, game_font, cell_number, cell_size, apple, grass_color, score_color, pygame, default_length_snake, fruit_group_id
+from init import screen, game_font, cell_number, cell_size, apple, grass_color, score_color, pygame, default_length_snake, fruit_group_id, nb_random_walls
 from FRUIT import FRUIT
 from WALL import WALL
 from pygame.math import Vector2
+import random
 
 class PARTY:
     def __init__(self,snakes):
 
         self.tab = [[0]*cell_number for i in range(cell_number)]
+
+        self.walls = []
+        for  id,(pos,orientation) in enumerate([(Vector2(cell_number-1,0),Vector2(1,0)),(Vector2(cell_number-1,cell_number-1),Vector2(0,1)),(Vector2(0,cell_number-1),Vector2(-1,0)),(Vector2(0,0),Vector2(0,-1))]):
+            wall = WALL()
+            wall.set_id(id)
+            wall.set_party(self)
+            wall.place(pos,orientation)
+            self.walls.append(wall)
+
+        for i in range(nb_random_walls):
+            wall = WALL(True, random.randint(3,6))
+            wall.set_id(i+4)
+            wall.set_party(self)
+            wall.place_randomly()
+            self.walls.append(wall)
+
 
         self.fruits = []
         self.snakes = snakes
@@ -21,15 +38,6 @@ class PARTY:
             self.fruits.append(fruit)
 
 
-        self.walls = []
-
-        for  id,(pos,orientation) in enumerate([(Vector2(cell_number-1,0),Vector2(1,0)),(Vector2(cell_number-1,cell_number-1),Vector2(0,1)),(Vector2(0,cell_number-1),Vector2(-1,0)),(Vector2(0,0),Vector2(0,-1))]):
-            wall = WALL()
-            wall.set_id(id)
-            wall.set_party(self)
-            wall.place(pos,orientation)
-            self.walls.append(wall)
-
         self.reset()
 
 
@@ -41,6 +49,11 @@ class PARTY:
         for fruit in self.fruits:
             fruit.reset()
             fruit.place_randomly()
+
+        for wall in self.walls:
+            if wall.randomly == True:
+                wall.reset()
+                wall.place_randomly()
 
     def update(self):
         for (index,snake) in enumerate(self.snakes):
@@ -63,7 +76,7 @@ class PARTY:
                 self.game_over()
                 return
             if snake.collisionned_block != 0:
-                type = snake.collisionned_block//10*10
+                type = snake.collisionned_block//100*100
                 if (type == fruit_group_id):
                     # bruitage
                     snake.play_eating_sound()

@@ -14,11 +14,13 @@ background_color = (175,215,70)
 grass_color = (167,209,61)
 score_color = (56,74,12)
 
-# Les id des serpents iront de 10 à 19
-snake_group_id = 10
+nb_random_walls = 10
 
-# Les id des murs iront de 20 à 29
-wall_group_id = 20
+# Les id des serpents iront de 100 à 199
+snake_group_id = 100
 
-# les ids des fruits irons de 40 à 49
-fruit_group_id = 40
+# Les id des murs iront de 200 à 299
+wall_group_id = 200
+
+# les ids des fruits irons de 400 à 499
+fruit_group_id = 400
