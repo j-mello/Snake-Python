@@ -1,11 +1,14 @@
 import sys
 from PARTY import PARTY
+from SNAKE import SNAKE
 from init import screen, pygame
 from pygame.math import Vector2
 
 clock = pygame.time.Clock()
 
-party = PARTY()
+snake = SNAKE(pygame.K_UP,pygame.K_DOWN,pygame.K_RIGHT,pygame.K_LEFT)
+
+party = PARTY(snake)
 
 SCREEN_UPDATE = pygame.USEREVENT #creation d'un event
 pygame.time.set_timer(SCREEN_UPDATE, 150) #L'event sera trigger toutes les 150 millisecondes
@@ -23,12 +26,7 @@ while True:
             party.draw_elements()
             pygame.display.update()
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP and party.snake.direction.y != 1:
-                party.snake.direction = Vector2(0,-1)
-            if event.key == pygame.K_DOWN and party.snake.direction.y != -1:
-                party.snake.direction = Vector2(0,1)
-            if event.key == pygame.K_RIGHT and party.snake.direction.x != -1:
-                party.snake.direction = Vector2(1,0)
-            if event.key == pygame.K_LEFT and party.snake.direction.x != 1:
-                party.snake.direction = Vector2(-1,0)
+            for (key,new_direction) in party.snake.KEYS.items():
+                if event.key == key and party.snake.direction != new_direction*(-1):
+                    party.snake.direction = new_direction
     screen.fill((175,215,70))

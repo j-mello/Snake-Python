@@ -1,11 +1,9 @@
-import pygame
-from init import screen, game_font, cell_number, cell_size, apple, grass_color, score_color
-from SNAKE import SNAKE
+from init import screen, game_font, cell_number, cell_size, apple, grass_color, score_color, pygame
 from FRUIT import FRUIT
 
 class PARTY:
-    def __init__(self):
-        self.snake = SNAKE()
+    def __init__(self,snake):
+        self.snake = snake
         self.fruit = FRUIT()
 
     def update(self):

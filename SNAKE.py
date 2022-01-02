@@ -3,7 +3,14 @@ from pygame.math import Vector2
 from init import screen, cell_size
 
 class SNAKE:
-    def __init__(self):
+    def __init__(self,UP_KEY,DOWN_KEY,RIGHT_KEY,LEFT_KEY):
+        self.KEYS = {
+            UP_KEY: Vector2(0,-1),
+            DOWN_KEY: Vector2(0,1),
+            RIGHT_KEY: Vector2(1,0),
+            LEFT_KEY: Vector2(-1,0)
+        }
+
         self.body = [Vector2(5,10), Vector2(4,10),Vector2(3,10)]
         self.direction = Vector2(0,0)
         self.new_block = False
