@@ -84,14 +84,12 @@ class SNAKE:
     def move_snake(self):
         if self.new_block == True:
             body_copy = self.body[:]
-            body_copy.insert(0,body_copy[0] + self.direction)
-            self.body = body_copy[:]
             self.new_block = False
-
         else:
             body_copy = self.body[:-1]
-            body_copy.insert(0,body_copy[0] + self.direction)
-            self.body = body_copy[:]
+
+        body_copy.insert(0,body_copy[0] + self.direction)
+        self.body = body_copy[:]
 
     def add_block(self):
         self.new_block = True

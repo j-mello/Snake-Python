@@ -29,9 +29,9 @@ class PARTY:
             self.snake.add_block()
 
         # empêcher le fruit d'apparaitre sur le serpent
-        for block in self.snake.body[1:]:
-            if block == self.fruit.pos:
-                self.fruit.randomize()
+        while any(pos == self.fruit.pos for pos in self.snake.body[1:]):
+            self.fruit.randomize()
+
 
     def check_fail(self):
         #Si snake est en dehors de l'écran
@@ -47,16 +47,10 @@ class PARTY:
 
     def grass(self):
         for row in range(cell_number):
-            if row % 2 == 0:
-                for col in range(cell_number):
-                    if col % 2 == 0:
-                        grass_rect = pygame.Rect(col*cell_size,row*cell_size,cell_size,cell_size)
-                        pygame.draw.rect(screen, grass_color, grass_rect)
-            else:
-                for col in range(cell_number):
-                    if col % 2 != 0:
-                        grass_rect = pygame.Rect(col*cell_size,row*cell_size,cell_size,cell_size)
-                        pygame.draw.rect(screen, grass_color, grass_rect)
+            for col in range(cell_number):
+                if row % 2 == col % 2:
+                    grass_rect = pygame.Rect(col*cell_size,row*cell_size,cell_size,cell_size)
+                    pygame.draw.rect(screen, grass_color, grass_rect)
 
     def score(self):
         score_text = str(len(self.snake.body) - 3)
