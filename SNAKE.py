@@ -1,9 +1,12 @@
 import pygame
 from pygame.math import Vector2
-from init import screen, cell_size, default_length_snake
+from init import screen, cell_size, default_length_snake, snake_group_id
+from ELEMENT import ELEMENT
 
-class SNAKE:
+class SNAKE(ELEMENT):
     def __init__(self,UP_KEY,DOWN_KEY,RIGHT_KEY,LEFT_KEY):
+        super().__init__()
+
         self.KEYS = {
             UP_KEY: Vector2(0,-1),
             DOWN_KEY: Vector2(0,1),
@@ -11,9 +14,10 @@ class SNAKE:
             LEFT_KEY: Vector2(-1,0)
         }
 
-        self.reset()
-
         self.length = default_length_snake
+        self.group_id = snake_group_id
+
+        self.reset()
 
         # Graphismes pour la tête du serpent
         self.head_up = pygame.image.load('graphisms/head_up.png').convert_alpha()
@@ -41,16 +45,14 @@ class SNAKE:
         self.eating_sound = pygame.mixer.Sound('sounds/crack.wav')
 
     def reset(self):
+        super().reset()
         self.orientation = Vector2(0,0)
         self.direction = Vector2(0,0)
         self.new_block = False
         self.body = []
         self.collisionned_block = 0
 
-    def set_party(self,party):
-        self.party = party
-
-    def draw_snake(self):
+    def draw(self):
         self.update_head_graphisms()
         self.update_tail_graphisms()
 
@@ -111,7 +113,7 @@ class SNAKE:
 
         body_copy.insert(0,body_copy[0] + self.direction)
         self.collisionned_block = self.party.tab[int(body_copy[0].y)][int(body_copy[0].x)]
-        self.party.tab[int(body_copy[0].y)][int(body_copy[0].x)] = 1
+        self.party.tab[int(body_copy[0].y)][int(body_copy[0].x)] = self.id
 
         self.body = body_copy[:]
 
