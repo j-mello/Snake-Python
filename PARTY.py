@@ -1,8 +1,10 @@
-from init import screen, game_font, cell_number, cell_size, fruit_icon, grass_color, score_color, pygame, default_length_snake, fruit_group_id, snake_group_id, wall_group_id, wormhole_group_id, nb_random_walls, nb_wormholes, use_tonic_grills
+from init import screen, game_font, cell_number, cell_size, fruit_icon, grass_color, score_color, pygame, default_length_snake, fruit_group_id, snake_group_id, wall_group_id, wormhole_group_id, ghostwall_group_id, nb_random_walls, nb_wormholes, use_tonic_grills, new_random_walls_at_each_new_fruit
 from FRUIT import FRUIT
 from WALL import WALL
 from TONIC_GRILL import TONIC_GRILL
 from WORMHOLE import WORMHOLE
+from GHOST_WALL import GHOST_WALL
+import random
 
 from pygame.math import Vector2
 import random
@@ -29,18 +31,11 @@ class PARTY:
 
 
         for i in range(nb_random_walls):
-            wall = WALL(True, random.randint(3,6))
+            wall = WALL(random.randint(3,6))
+            wall.randomly = True
             wall.set_id(i+nb_static_walls)
             wall.set_party(self)
-            wall.place_randomly()
             self.elements.append(wall)
-
-        for id in range(nb_wormholes):
-            wormhole = WORMHOLE()
-            wormhole.set_id(id)
-            wormhole.set_party(self)
-            wormhole.place_randomly()
-            self.elements.append(wormhole)
 
 
         for (id,snake) in enumerate(snakes):
@@ -51,19 +46,31 @@ class PARTY:
             fruit = FRUIT()
             fruit.set_id(id)
             fruit.set_party(self)
-            fruit.place_randomly()
             self.elements.append(fruit)
+
+        for id in range(nb_wormholes):
+            wormhole = WORMHOLE()
+            wormhole.set_id(id)
+            wormhole.set_party(self)
+            self.elements.append(wormhole)
 
 
         self.reset()
 
 
     def reset(self):
-        for element in self.elements:
+        to_deletes = []
+        for i,element in enumerate(self.elements):
             type = element.id//100*100
             if type == snake_group_id or type == fruit_group_id or type == wormhole_group_id or (type == wall_group_id and element.randomly == True):
                 element.reset()
                 element.place_randomly()
+            elif type == ghostwall_group_id or (type == wall_group_id and element.delete_at_next_game == True):
+                element.reset()
+                to_deletes.append(i)
+
+        for i in sorted(to_deletes, reverse=True):
+            del self.elements[i]
 
     def update(self):
         for element in self.elements:
@@ -96,6 +103,47 @@ class PARTY:
             if element.id == id:
                 return element
         return None
+
+    def set_dynamic_wall(self):
+        if new_random_walls_at_each_new_fruit == False:
+            return
+
+        to_deletes = []
+        nb_elements = len(self.elements)
+        for i in range(nb_elements):
+            element = self.elements[i]
+            if element.id//100*100 == ghostwall_group_id:
+                element.remaining_times -= 1
+                if (element.remaining_times == 0):
+                    pos = element.pos
+                    orientation = element.orientation
+
+                    element.reset()
+                    to_deletes.append(i)
+
+                    wall = WALL(element.length)
+                    wall.set_party(self)
+                    wall.auto_set_id()
+                    wall.place(pos,orientation)
+                    wall.delete_at_next_game = True
+                    wall.delete_in = random.randint(2,3)
+                    self.elements.append(wall)
+            elif element.id//100*100 == wall_group_id and element.delete_in != False:
+                element.delete_in -= 1
+                if element.delete_in == 0:
+                    to_deletes.append(i)
+                    element.reset()
+
+
+        for i in sorted(to_deletes, reverse=True):
+            del self.elements[i]
+
+        for i in range(random.randint(1,2)):
+            ghost_wall = GHOST_WALL(random.randint(3,4))
+            ghost_wall.set_party(self)
+            ghost_wall.auto_set_id()
+            ghost_wall.place_randomly()
+            self.elements.append(ghost_wall)
 
     def game_over(self):
         self.reset()

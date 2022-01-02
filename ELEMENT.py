@@ -1,5 +1,5 @@
 from pygame.math import Vector2
-from init import cell_number, cell_size, screen, pygame
+from init import cell_number, cell_size, screen, pygame, wall_group_id
 import random
 
 class ELEMENT:
@@ -21,8 +21,15 @@ class ELEMENT:
             raise Exception('Id dépassant 99')
         self.id = self.group_id+id
 
+    def auto_set_id(self):
+        id = self.group_id
+        for element in self.party.elements:
+            if element.id == id:
+                id += 1
+        self.id = id
+
     def set_party(self,party):
-            self.party = party
+        self.party = party
 
     def place(self,pos,orientation):
         self.orientation = orientation

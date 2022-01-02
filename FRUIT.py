@@ -1,5 +1,5 @@
 import pygame, random
-from init import screen, cell_number, cell_size, fruit_icon, fruit_group_id
+from init import screen, cell_number, cell_size, fruit_icon, fruit_group_id, new_random_walls_at_each_new_fruit
 from ELEMENT import ELEMENT
 
 class FRUIT(ELEMENT):
@@ -14,7 +14,10 @@ class FRUIT(ELEMENT):
          # bruitage
          snake.play_eating_sound()
          # replacer un fruit ailleurs
+         self.reset()
          self.place_randomly()
          # rendre le serpent plus grand
          snake.add_block()
          snake.collisionned_block = 0
+
+         self.party.set_dynamic_wall()

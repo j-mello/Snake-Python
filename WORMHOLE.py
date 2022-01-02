@@ -19,11 +19,16 @@ class WORMHOLE(ELEMENT):
                 pos = Vector2(random.randint(0,cell_number-1), random.randint(0,cell_number-1))
                 if (self.party.tab[int(pos.y)][int(pos.x)] != 0):
                     continue
+
+                ok = True
                 for xs in (-1,0,1):
                     for ys in (-1,0,1):
-                       if pos.x + xs < 0 or pos.x + xs >= cell_number or pos.y + ys < 0 or pos.y + ys >= cell_number or self.party.tab[int(pos.y + ys)][int(pos.x + xs)] != 0:
-                        continue
-                break
+                        if self.party.tab[int(pos.y + ys)][int(pos.x + xs)] != 0:
+                            ok = False
+                            break
+                    if ok == False: break
+
+                if ok == True: break
             self.body.append(pos)
             self.party.tab[int(pos.y)][int(pos.x)] = self.id
 
