@@ -98,7 +98,7 @@ class SNAKE(ELEMENT):
         elif tail_relation == Vector2(0,1): self.tail = self.tail_up
         elif tail_relation == Vector2(0,-1): self.tail = self.tail_down
 
-    def move_snake(self,index):
+    def move_snake(self):
         if self.direction == Vector2(0,0):
             return
 

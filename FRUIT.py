@@ -1,6 +1,5 @@
 import pygame, random
-from pygame.math import Vector2
-from init import screen, cell_number, cell_size, apple, fruit_group_id
+from init import screen, cell_number, cell_size, fruit_icon, fruit_group_id
 from ELEMENT import ELEMENT
 
 class FRUIT(ELEMENT):
@@ -8,9 +7,14 @@ class FRUIT(ELEMENT):
         super().__init__()
         self.group_id = fruit_group_id
 
-    def draw(self):
-        #create the rectangle
-        fruit_rect = pygame.Rect(self.pos.x * cell_size, self.pos.y * cell_size, cell_size, cell_size)
-        #draw the rectangle
-        screen.blit(apple, fruit_rect)
-        #pygame.draw.rect(screen,(126,166,114), fruit_rect)
+        self.icon = fruit_icon
+
+
+    def collision(self,snake):
+         # bruitage
+         snake.play_eating_sound()
+         # replacer un fruit ailleurs
+         self.place_randomly()
+         # rendre le serpent plus grand
+         snake.add_block()
+         snake.collisionned_block = 0

@@ -1,5 +1,5 @@
 from pygame.math import Vector2
-from init import cell_number, pygame
+from init import cell_number, cell_size, screen, pygame
 import random
 
 class ELEMENT:
@@ -51,3 +51,16 @@ class ELEMENT:
             if not 0 <= block.x < cell_number or not 0 <= block.y < cell_number or self.party.tab[int(block.y)][int(block.x)] != 0:
                 return False
         return True
+
+    def draw(self):
+        for block in self.body:
+            # On crée les rect pour les positions
+            x_pos = int(block.x * cell_size)
+            y_pos = int(block.y * cell_size)
+            block_rect = pygame.Rect(x_pos, y_pos, cell_size,cell_size)
+
+            screen.blit(self.icon,block_rect)
+
+    def collision(self,snake):
+        self.party.game_over()
+        return False
