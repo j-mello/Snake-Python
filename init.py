@@ -14,6 +14,7 @@ grass_color = (167,209,61)
 score_color = (56,74,12)
 
 fruit_icon = pygame.image.load('graphisms/apple.png').convert_alpha()
+super_fruit_icon = pygame.image.load('graphisms/super_apple.png').convert_alpha()
 tonic_icon = pygame.image.load('graphisms/tonic.png').convert_alpha()
 wormhole_icon = pygame.image.load('graphisms/wormhole.png').convert_alpha()
 wall_icon = pygame.image.load('graphisms/wall.png').convert_alpha()

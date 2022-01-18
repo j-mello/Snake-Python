@@ -1,5 +1,6 @@
 from init import screen, game_font, cell_number, cell_size, fruit_icon, grass_color, score_color, pygame, default_length_snake, fruit_group_id, snake_group_id, wall_group_id, wormhole_group_id, ghostwall_group_id, tonic_group_id, nb_random_walls, nb_wormholes, use_tonic_grills, new_random_walls_at_each_new_fruit, periodically_shrink_grill
 from FRUIT import FRUIT
+from SUPER_FRUIT import SUPER_FRUIT
 from WALL import WALL
 from TONIC_GRILL import TONIC_GRILL
 from WORMHOLE import WORMHOLE
@@ -35,7 +36,7 @@ class PARTY:
             snake.set_id(id)
             self.elements.append(snake)
 
-            fruit = FRUIT(self)
+            fruit = FRUIT(self) if random.randint(0,4) <= 3 else SUPER_FRUIT(self)
             fruit.set_id(id)
             self.elements.append(fruit)
 
@@ -57,6 +58,21 @@ class PARTY:
             wall.set_id(id)
             wall.place(pos,orientation)
             self.elements.append(wall)
+
+    def place_new_fruit(self,fruit):
+        fruit.reset()
+        p = random.randint(0,4)
+
+        c = (1 if fruit.super_fruit == True else 0)*2 + (1 if p <= 3 else 0)
+
+        if c == 1 or c == 2:
+            fruit.place_randomly()
+        else:
+            self.delete_element_by_id(fruit.id)
+            new_fruit = FRUIT(self) if fruit.super_fruit == True else SUPER_FRUIT(self)
+            new_fruit.set_id(fruit.id%100)
+            new_fruit.place_randomly()
+            self.elements.append(new_fruit)
 
 
     def reset(self):
@@ -114,6 +130,13 @@ class PARTY:
             if element.id == id:
                 return element,i
         return None
+
+    def delete_element_by_id(self,id):
+       for (i,element) in enumerate(self.elements):
+            if element.id == id:
+                del self.elements[i]
+                return True
+       return False
 
     def set_dynamic_wall(self):
         if new_random_walls_at_each_new_fruit == False:

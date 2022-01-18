@@ -47,7 +47,7 @@ class SNAKE(ELEMENT):
     def reset(self):
         super().reset()
         self.direction = Vector2(0,0)
-        self.new_block = False
+        self.new_block = 0
         self.collisionned_block = 0
 
     def draw(self):
@@ -102,9 +102,9 @@ class SNAKE(ELEMENT):
         if self.direction == Vector2(0,0):
             return
 
-        if self.new_block == True:
+        if self.new_block > 0:
             body_copy = self.body[:]
-            self.new_block = False
+            self.new_block -= 1
         else:
             self.party.tab[int(self.body[-1].y)][int(self.body[-1].x)] = 0
             body_copy = self.body[:-1]
@@ -115,8 +115,8 @@ class SNAKE(ELEMENT):
 
         self.body = body_copy[:]
 
-    def add_block(self):
-        self.new_block = True
+    def add_block(self, n = 1):
+        self.new_block += n
 
     def play_eating_sound(self):
         self.eating_sound.play()

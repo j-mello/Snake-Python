@@ -59,7 +59,7 @@ class ELEMENT:
     def check_random_placement(self,orientation,pos,length):
         for i in range(length):
             block = pos-orientation*i
-            if not 0 <= block.x < self.party.cell_number or not 0 <= block.y < self.party.cell_number or self.party.tab[int(block.y)][int(block.x)] != 0:
+            if not self.limit_spawn <= block.x < self.party.cell_number-self.limit_spawn or not self.limit_spawn <= block.y < self.party.cell_number-self.limit_spawn or self.party.tab[int(block.y)][int(block.x)] != 0:
                 return False
         return True
 
