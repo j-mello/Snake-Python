@@ -4,7 +4,8 @@ import random
 
 class GHOST_WALL(ELEMENT):
 
-    def __init__(self,length):
+    def __init__(self,party,length):
+        super().__init__(party)
         self.group_id = ghostwall_group_id
         self.length = length
 

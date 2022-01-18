@@ -1,10 +1,12 @@
-from init import cell_number, wall_group_id, wall_icon, pygame
+from init import wall_group_id, wall_icon, pygame
 from ELEMENT import ELEMENT
 
 class WALL(ELEMENT):
 
-    def __init__(self, length = cell_number-1):
-        super().__init__()
+    def __init__(self, party, length = None):
+        super().__init__(party)
+        if length == None:
+            length = self.party.cell_number-1
         self.length = length
         self.group_id = wall_group_id
         self.randomly = False

@@ -1,12 +1,14 @@
 from ELEMENT import ELEMENT
-from init import wormhole_group_id, cell_number, wormhole_icon
+from init import wormhole_group_id, wormhole_icon
 import random
 from pygame.math import Vector2
 
 class WORMHOLE(ELEMENT):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self,party):
+        super().__init__(party)
+        self.limit_spawn = 2
+        self.place_randomly_when_shrink = True
         self.group_id = wormhole_group_id
 
         self.icon = wormhole_icon
@@ -16,14 +18,16 @@ class WORMHOLE(ELEMENT):
         self.body = []
         for i in range(2):
             while True:
-                pos = Vector2(random.randint(0,cell_number-1), random.randint(0,cell_number-1))
+                pos = Vector2(random.randint(0,self.party.cell_number-1), random.randint(0,self.party.cell_number-1))
                 if (self.party.tab[int(pos.y)][int(pos.x)] != 0):
                     continue
 
                 ok = True
                 for xs in (-1,0,1):
                     for ys in (-1,0,1):
-                        if self.party.tab[int(pos.y + ys)][int(pos.x + xs)] != 0:
+                        if (self.party.tab[int(pos.y + ys)][int(pos.x + xs)] != 0 or
+                           pos.y + ys >= self.party.cell_number-self.limit_spawn or
+                           pos.x + xs >= self.party.cell_number-self.limit_spawn):
                             ok = False
                             break
                     if ok == False: break

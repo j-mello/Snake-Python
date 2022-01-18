@@ -7,9 +7,9 @@ from pygame.math import Vector2
 clock = pygame.time.Clock()
 
 snake = SNAKE(pygame.K_UP,pygame.K_DOWN,pygame.K_RIGHT,pygame.K_LEFT)
-snake2 = SNAKE(pygame.K_z,pygame.K_s,pygame.K_d,pygame.K_q)
+#snake2 = SNAKE(pygame.K_z,pygame.K_s,pygame.K_d,pygame.K_q)
 
-party = PARTY([snake,snake2])
+party = PARTY([snake])
 
 SCREEN_UPDATE = pygame.USEREVENT #creation d'un event
 pygame.time.set_timer(SCREEN_UPDATE, 150) #L'event sera trigger toutes les 150 millisecondes
@@ -26,7 +26,7 @@ while True:
             screen.fill((175,215,70))
             party.update()
             party.draw_elements()
-            pygame.display.update()
+            party.display_update()
         if event.type == pygame.KEYDOWN:
             for (index,snake) in enumerate(party.elements):
                 if snake.id//100*100 != snake_group_id:

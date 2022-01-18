@@ -1,13 +1,17 @@
 from pygame.math import Vector2
-from init import cell_number, cell_size, screen, pygame, wall_group_id
+from init import cell_size, screen, pygame, wall_group_id
 import random
 
 class ELEMENT:
-    def __init__(self):
+    def __init__(self,party = None):
+        if party != None:
+            self.set_party(party)
         self.group_id = 0
         self.length = 1
         self.pos = Vector2(0,0)
         self.body = []
+        self.limit_spawn = 1
+        self.place_randomly_when_shrink = False
         self.reset()
 
     def reset(self):
@@ -44,8 +48,8 @@ class ELEMENT:
         while True:
             orientation = [Vector2(0,-1),Vector2(1,0),Vector2(0,1),Vector2(-1,0)][random.randint(0,3)]
 
-            pos_x = random.randint(0,cell_number-1)
-            pos_y = random.randint(0,cell_number-1)
+            pos_x = random.randint(0,self.party.cell_number-1)
+            pos_y = random.randint(0,self.party.cell_number-1)
             pos = Vector2(pos_x,pos_y)
             if (self.check_random_placement(orientation,pos,self.length) == True):
                 break
@@ -55,7 +59,7 @@ class ELEMENT:
     def check_random_placement(self,orientation,pos,length):
         for i in range(length):
             block = pos-orientation*i
-            if not 0 <= block.x < cell_number or not 0 <= block.y < cell_number or self.party.tab[int(block.y)][int(block.x)] != 0:
+            if not 0 <= block.x < self.party.cell_number or not 0 <= block.y < self.party.cell_number or self.party.tab[int(block.y)][int(block.x)] != 0:
                 return False
         return True
 

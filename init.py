@@ -24,12 +24,16 @@ ghost_wall_icon.set_alpha(100)
 nb_random_walls = 0
 
 #Afficher aléatoirement de nouveaux murs supplémentaire à chaque fruit mangé
-new_random_walls_at_each_new_fruit = True
+new_random_walls_at_each_new_fruit = False
 
+#Le nombre de trous de ver
 nb_wormholes = 1
 
 #Remplacer les murs des coté, par des grilles qui téléportent de l'autre coté
 use_tonic_grills = True
+
+#Depuis diminuer la tailler du niveau régulièrement
+periodically_shrink_grill = 1
 
 
 

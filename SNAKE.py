@@ -1,6 +1,6 @@
 import pygame
 from pygame.math import Vector2
-from init import screen, cell_size, cell_number, default_length_snake, snake_group_id
+from init import screen, cell_size, default_length_snake, snake_group_id
 from ELEMENT import ELEMENT
 
 class SNAKE(ELEMENT):
