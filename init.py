@@ -14,6 +14,7 @@ grass_color = (167,209,61)
 score_color = (56,74,12)
 
 fruit_icon = pygame.image.load('graphisms/apple.png').convert_alpha()
+ghost_fruit_icon = pygame.image.load('graphisms/ghost_apple.png').convert_alpha()
 super_fruit_icon = pygame.image.load('graphisms/super_apple.png').convert_alpha()
 bad_fruit_icon = pygame.image.load('graphisms/bad_apple.png').convert_alpha()
 tonic_icon = pygame.image.load('graphisms/tonic.png').convert_alpha()
@@ -37,9 +38,11 @@ use_tonic_grills = True
 #Depuis diminuer la tailler du niveau régulièrement
 periodically_shrink_grill = 0
 
-use_super_fruit = True
+use_super_fruit = False
 
-use_bad_fruit = True
+use_bad_fruit = False
+
+use_ghost_fruit = True
 
 
 

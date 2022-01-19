@@ -22,6 +22,11 @@ class FRUIT(ELEMENT):
         self.party.set_dynamic_wall()
         self.party.shrink_grill()
 
+        if snake.lost_ghost_in > 0:
+            snake.lost_ghost_in -= 1
+        elif snake.ghost_activated == True:
+            snake.ghost_activated = False
+
         snake.collisionned_block = 0
         if self.special_fruit == False:
             # rendre le serpent plus grand
