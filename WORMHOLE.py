@@ -1,5 +1,5 @@
 from ELEMENT import ELEMENT
-from init import wormhole_group_id, wormhole_icon
+from init import wormhole_icon
 import random
 from pygame.math import Vector2
 
@@ -9,7 +9,8 @@ class WORMHOLE(ELEMENT):
         super().__init__(party)
         self.limit_spawn = 2
         self.place_randomly_when_shrink = True
-        self.group_id = wormhole_group_id
+
+        self.type = "wormhole"
 
         self.icon = wormhole_icon
 
@@ -38,11 +39,10 @@ class WORMHOLE(ELEMENT):
                 if ok == True: break
                 i += 1
             if i == limit_try_wormhole_spawn:
-                self.party.delete_element_by_id(self.id)
-                self.reset()
+                self.delete()
                 return
             self.body.append(pos)
-            self.party.tab[int(pos.y)][int(pos.x)] = self.id
+            self.party.tab[int(pos.y)][int(pos.x)] = self
 
 
 
@@ -51,12 +51,12 @@ class WORMHOLE(ELEMENT):
         dstPos = self.body[1][:] if srcPos == self.body[0] else self.body[0][:]
         dstPos += snake.direction
 
-        self.party.tab[int(srcPos.y)][int(srcPos.x)] = self.id
+        self.party.tab[int(srcPos.y)][int(srcPos.x)] = self
         if self.party.tab[int(dstPos.y)][int(dstPos.x)] != 0:
-            element = self.party.get_element_by_id(self.party.tab[int(dstPos.y)][int(dstPos.x)])[0]
+            element = self.party.tab[int(dstPos.y)][int(dstPos.x)]
             if element.collision(snake) == False:
                 return False
-        self.party.tab[int(dstPos.y)][int(dstPos.x)] = snake.id
+        self.party.tab[int(dstPos.y)][int(dstPos.x)] = snake
 
         snake.body[0] = dstPos
 

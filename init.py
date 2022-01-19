@@ -5,7 +5,7 @@ pygame.mixer.pre_init(44100,-16,2,512) # Précharge le son pour éviter un poten
 pygame.init()
 
 cell_size = 40
-cell_number = 22
+cell_number = 20
 default_length_snake = 3
 screen = pygame.display.set_mode((cell_number*cell_size,cell_number*cell_size))
 game_font = pygame.font.Font('fonts/Marcha.ttf', 25)
@@ -26,48 +26,24 @@ ghost_wall_icon = pygame.image.load('graphisms/wall.png').convert_alpha()
 ghost_wall_icon.set_alpha(100)
 
 #Afficher aléatoirement des murs dans le niveau
-nb_random_walls = 3
+nb_random_walls = 0
 
 #Afficher aléatoirement de nouveaux murs supplémentaire à chaque fruit mangé
-new_random_walls_at_each_new_fruit = True
+new_random_walls_at_each_new_fruit = False
 
 #Le nombre de trous de ver
 nb_wormholes = 1
 
 #Remplacer les murs des coté, par des grilles qui téléportent de l'autre coté
-use_tonic_grills = True
+use_tonic_grills = False
 
 #Depuis diminuer la tailler du niveau régulièrement
-periodically_shrink_grill = 0
+periodically_shrink_grill = 1
 
 use_super_fruit = False
 
 use_bad_fruit = False
 
-use_ghost_fruit = False
+use_ghost_fruit = True
 
 use_fire_fruit = True
-
-
-
-
-# Les id des serpents iront de 100 à 199
-snake_group_id = 100
-
-# Les id des murs iront de 200 à 299
-wall_group_id = 200
-
-# Les ids des grilles tonique irons de 300 à 399
-tonic_group_id = 300
-
-# les ids des fruits irons de 400 à 499
-fruit_group_id = 400
-
-# Les ids des trous de ver irons de 500 à 599
-wormhole_group_id = 500
-
-# Les ids des murs fantomes irons de 600 à 699
-ghostwall_group_id = 600
-
-# Les ids des auras feu irons de 700 à 799
-fire_group_id = 700

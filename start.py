@@ -1,7 +1,7 @@
 import sys
 from PARTY import PARTY
 from SNAKE import SNAKE
-from init import screen, pygame, snake_group_id
+from init import screen, pygame
 from pygame.math import Vector2
 
 clock = pygame.time.Clock()
@@ -28,8 +28,8 @@ while True:
             party.draw_elements()
             party.display_update()
         if event.type == pygame.KEYDOWN:
-            for (index,snake) in enumerate(party.elements):
-                if snake.id//100*100 != snake_group_id:
+            for snake in party.elements.values():
+                if snake.type != "snake":
                     continue
                 for (key,new_direction) in snake.KEYS.items():
                     if event.key == key and snake.orientation != new_direction*(-1):

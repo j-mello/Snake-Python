@@ -1,40 +1,39 @@
 from pygame.math import Vector2
-from init import cell_size, screen, pygame, fruit_group_id
+from init import cell_size, screen, pygame
 import random
 
 class ELEMENT:
     def __init__(self,party = None):
         if party != None:
             self.set_party(party)
-        self.group_id = 0
         self.length = 1
         self.pos = Vector2(0,0)
         self.body = []
         self.limit_spawn = 1
         self.place_randomly_when_shrink = False
+        self.type = "element"
         self.reset()
 
     def reset(self):
         for block in self.body:
-            if self.party.tab[int(block.y)][int(block.x)] == self.id:
+            if self.party.tab[int(block.y)][int(block.x)] != 0 and self.party.tab[int(block.y)][int(block.x)].id == self.id:
                 self.party.tab[int(block.y)][int(block.x)] = 0
         self.body = []
         self.orientation = Vector2(0,0)
 
-    def set_id(self,id):
-        if id > 99:
-            raise Exception('Id dépassant 99')
-        self.id = self.group_id+id
-
-    def auto_set_id(self):
-        id = self.group_id
-        for element in self.party.elements:
-            if element.id == id:
-                id += 1
-        self.id = id
+    def delete(self):
+        self.reset()
+        if self.id in self.party.elements:
+            del self.party.elements[self.id]
 
     def set_party(self,party):
         self.party = party
+        self.auto_set_id()
+        self.party.elements[self.id] = self
+
+    def auto_set_id(self):
+        self.party.auto_increment_ids_state += 1
+        self.id = self.party.auto_increment_ids_state
 
     def place(self,pos,orientation):
         self.orientation = orientation
@@ -42,7 +41,7 @@ class ELEMENT:
         self.body = []
         for i in range(self.length):
             block = pos-orientation*i
-            self.party.tab[int(block.y)][int(block.x)] = self.id
+            self.party.tab[int(block.y)][int(block.x)] = self
             self.body.append(block)
 
     def place_randomly(self):

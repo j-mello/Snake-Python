@@ -1,4 +1,4 @@
-from init import fire_icon, snake_group_id, fire_group_id
+from init import fire_icon
 from pygame.math import Vector2
 import json
 from ELEMENT import ELEMENT
@@ -9,7 +9,7 @@ class FIRE(ELEMENT):
         super().__init__(party)
         self.snake = snake
         self.icon = fire_icon
-        self.group_id = fire_group_id
+        self.type = "fire"
 
 
     def place(self):
@@ -19,10 +19,15 @@ class FIRE(ELEMENT):
             y = int(snake_block.y)
             for xs in (-1,0,1):
                 for ys in (-1,0,1):
-                    if (xs == 0 and ys == 0) or not 0 < x+xs < self.party.cell_number or not 0 < y+ys < self.party.cell_number or self.party.tab[y+ys][x+xs] != 0:
+                    if (
+                        (xs == 0 and ys == 0) or
+                        not 0 < x+xs < self.party.cell_number or
+                        not 0 < y+ys < self.party.cell_number or
+                        (self.party.tab[y+ys][x+xs] != 0 and self.party.tab[y+ys][x+xs].type != "ghost_wall")):
                         continue
+
                     self.body.append(Vector2(x+xs,y+ys))
-                    self.party.tab[y+ys][x+xs] = self.id
+                    self.party.tab[y+ys][x+xs] = self
 
 
     def collision(self,snake):

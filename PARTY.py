@@ -1,4 +1,4 @@
-from init import screen, game_font, cell_number, cell_size, fruit_icon, grass_color, score_color, pygame, default_length_snake, fruit_group_id, snake_group_id, wall_group_id, wormhole_group_id, ghostwall_group_id, tonic_group_id, fire_group_id, nb_random_walls, nb_wormholes, use_tonic_grills, new_random_walls_at_each_new_fruit, periodically_shrink_grill, use_super_fruit, use_bad_fruit, use_ghost_fruit, use_fire_fruit
+from init import screen, game_font, cell_number, cell_size, fruit_icon, grass_color, score_color, pygame, default_length_snake, nb_random_walls, nb_wormholes, use_tonic_grills, new_random_walls_at_each_new_fruit, periodically_shrink_grill, use_super_fruit, use_bad_fruit, use_ghost_fruit, use_fire_fruit
 from FRUIT import FRUIT
 from SUPER_FRUIT import SUPER_FRUIT
 from BAD_FRUIT import BAD_FRUIT
@@ -21,8 +21,9 @@ class PARTY:
         self.cell_number = cell_number
         self.old_cell_number = cell_number
 
-        self.elements = []
+        self.elements = {}
 
+        self.auto_increment_ids_state = 0
 
         self.place_walls()
 
@@ -30,23 +31,15 @@ class PARTY:
         for i in range(nb_random_walls):
             wall = WALL(self,random.randint(3,6))
             wall.randomly = True
-            wall.set_id(4+i)
-            self.elements.append(wall)
 
 
-        for (id,snake) in enumerate(snakes):
+        for (i,snake) in enumerate(snakes):
             snake.set_party(self)
-            snake.set_id(id)
-            self.elements.append(snake)
-
+            snake.set_player_number(i)
             fruit = FRUIT(self)
-            fruit.set_id(id)
-            self.elements.append(fruit)
 
         for id in range(nb_wormholes):
             wormhole = WORMHOLE(self)
-            wormhole.set_id(id)
-            self.elements.append(wormhole)
 
 
         self.reset()
@@ -58,9 +51,7 @@ class PARTY:
                 wall = WALL(self)
             else:
                 wall = TONIC_GRILL(self,'V' if id % 2 == 0 else 'H')
-            wall.set_id(id)
             wall.place(pos,orientation)
-            self.elements.append(wall)
 
     def place_new_fruit(self,fruit):
         fruit.reset()
@@ -70,7 +61,7 @@ class PARTY:
         if c == 1 or c == 2:
             fruit.place_randomly()
         else:
-            self.delete_element_by_id(fruit.id)
+            fruit.delete()
             if fruit.special_fruit == True:
                 new_fruit = FRUIT(self)
             else:
@@ -87,38 +78,33 @@ class PARTY:
                 fruit_class = possibles_fruits[random.randint(0,len(possibles_fruits)-1)]
                 new_fruit = fruit_class(self)
 
-            new_fruit.set_id(fruit.id%100)
             new_fruit.place_randomly()
-            self.elements.append(new_fruit)
 
 
     def reset(self):
         self.cell_number = cell_number
         self.tab = [[0]*cell_number for i in range(cell_number)]
         to_deletes = []
-        for i,element in enumerate(self.elements):
-            type = element.id//100*100
-            if type == snake_group_id or type == fruit_group_id or type == wormhole_group_id or (type == wall_group_id and element.randomly == True):
+        for element in self.elements.values():
+            if element.type == "snake" or element.type == "fruit" or element.type == "wormhole" or (element.type == "wall" and element.randomly == True):
                 element.reset()
                 element.place_randomly()
-            elif any(type == group_id for group_id in (ghostwall_group_id,wall_group_id,tonic_group_id,fire_group_id)):
-                element.reset()
-                to_deletes.append(i)
+            elif any(element.type == type for type in ("ghost_wall","wall","tonic_grill","fire")):
+                to_deletes.append(element)
 
+        for element in to_deletes:
+            element.delete()
         self.place_walls()
 
-        for i in sorted(to_deletes, reverse=True):
-            del self.elements[i]
-
     def update(self):
-        for element in self.elements:
-            if element.id//100*100 == snake_group_id:
+        for element in self.elements.values():
+            if element.type == "snake":
                 element.move_snake()
         self.check_collision()
 
     def draw_elements(self):
         self.grass()
-        for element in self.elements:
+        for element in self.elements.values():
             element.draw()
         self.scores()
 
@@ -129,105 +115,76 @@ class PARTY:
         pygame.display.update()
 
     def check_collision(self):
-        for snake in self.elements:
-            if snake.id//100*100 != snake_group_id:
+        for snake in list(self.elements.values()):
+            if snake.type != "snake":
                 continue
 
             if not 0 <= snake.body[0].x < self.cell_number or not 0 <= snake.body[0].y < self.cell_number:
                 self.game_over()
                 return
 
-            if snake.collisionned_block != 0:
-                t = self.get_element_by_id(snake.collisionned_block)
-                element = None if t == None else t[0]
-                if element != None and element.collision(snake) == False:
+            if snake.collisionned_entity != 0:
+                if snake.collisionned_entity.collision(snake) == False:
                     return
-
-    def get_element_by_id(self,id):
-        for (i,element) in enumerate(self.elements):
-            if element.id == id:
-                return element,i
-        return None
-
-    def delete_element_by_id(self,id):
-       for (i,element) in enumerate(self.elements):
-            if element.id == id:
-                del self.elements[i]
-                return True
-       return False
+                snake.collisionned_entity = 0
 
     def set_dynamic_wall(self):
         if new_random_walls_at_each_new_fruit == False:
             return
 
-        to_deletes = []
-        for (i,element) in enumerate(self.elements):
-            element = self.elements[i]
-            if element.id//100*100 == ghostwall_group_id:
+        for element in list(self.elements.values()):
+            if element.type == "ghost_wall":
                 element.remaining_times -= 1
                 if (element.remaining_times == 0):
                     pos = element.pos
                     orientation = element.orientation
 
-                    element.reset()
-                    to_deletes.append(i)
+                    element.delete()
 
                     wall = WALL(self, element.length)
-                    wall.auto_set_id()
                     wall.place(pos,orientation)
                     wall.delete_at_next_game = True
                     wall.delete_in = random.randint(2,3)
-                    self.elements.append(wall)
-            elif element.id//100*100 == wall_group_id and element.delete_in != False:
+            elif element.type == "wall" and element.delete_in != False:
                 element.delete_in -= 1
                 if element.delete_in == 0:
-                    to_deletes.append(i)
-                    element.reset()
-
-
-        for i in sorted(to_deletes, reverse=True):
-            del self.elements[i]
+                    element.delete()
 
         for i in range(random.randint(1,2)):
             ghost_wall = GHOST_WALL(self,random.randint(3,4))
-            ghost_wall.auto_set_id()
             ghost_wall.place_randomly()
-            self.elements.append(ghost_wall)
 
 
-    def shift_element(self,element,index,to_shift,to_deletes):
+    def shift_element(self,element,to_shift,to_deletes):
         old_body = [Vector2(block.x,block.y) for block in element.body]
         element.pos -= to_shift
         for block in element.body:
             block -= to_shift
-            if block.x < element.limit_spawn or block.y < element.limit_spawn or (self.tab[int(block.y)][int(block.x)] != 0 and self.tab[int(block.y)][int(block.x)] != element.id):
-                if element.id//100*100 != snake_group_id:
-                    element.reset()
-                    to_deletes.append(index)
+            if block.x < element.limit_spawn or block.y < element.limit_spawn or (self.tab[int(block.y)][int(block.x)] != 0 and self.tab[int(block.y)][int(block.x)].id != element.id):
+                if element.type != "snake":
+                    to_deletes.append(element)
                     break
 
                 if block.x < 1 or block.y < 1:
                     self.game_over()
                     return False
 
-                other_element,other_index_element = self.get_element_by_id(self.tab[int(block.y)][int(block.x)])
+                other_element = self.tab[int(block.y)][int(block.x)]
                 if other_element.place_randomly_when_shrink == True:
-                    other_element.reset()
-                    other_element.place_randomly()
+                    to_deletes.append(other_element)
                     continue
 
-                if self.tab[int(block.y)][int(block.x)]//100*100 == snake_group_id:
-                    self.shift_element(other_element,other_index_element,to_shift,to_deletes)
+                if other_element.type == "snake":
+                    self.shift_element(other_element,to_shift,to_deletes)
                     continue
 
-                other_element.reset()
-                to_deletes.append(other_index_element)
+                to_deletes.append(other_element)
 
-        if len(to_deletes) == 0 or to_deletes[-1] != index:
+        if len(to_deletes) == 0 or to_deletes[-1].id != element.id:
             for old_block in old_body:
                 self.tab[int(old_block.y)][int(old_block.x)] = 0
             for block in element.body:
-                self.tab[int(block.y)][int(block.x)] = element.id
+                self.tab[int(block.y)][int(block.x)] = element
         return True
 
 
@@ -235,12 +192,11 @@ class PARTY:
         if periodically_shrink_grill <= 0 or self.cell_number <= 10 or random.randint(0,1) == 0:
             return
 
-        to_deletes = []
         self.cell_number -= periodically_shrink_grill
-        for (i,element) in enumerate(self.elements):
-            if (element.id//100*100 == wall_group_id and element.randomly == False) or element.id//100*100 == tonic_group_id:
-                element.reset()
-                to_deletes.append(i)
+        to_deletes = []
+        for element in self.elements.values():
+            if (element.type == "wall" and element.randomly == False) or element.type == "tonic_grill":
+                to_deletes.append(element)
                 continue
 
             checking_element = True
@@ -261,14 +217,13 @@ class PARTY:
                         element.reset()
                         element.place_randomly()
                         break
-                    elif self.shift_element(element,i,to_shift,to_deletes) == False:
+                    elif self.shift_element(element,to_shift,to_deletes) == False:
                         return
 
+        for element in to_deletes:
+            element.delete()
 
         self.tab = [line[:-periodically_shrink_grill] for line in self.tab[:-periodically_shrink_grill]]
-
-        for i in sorted(to_deletes, reverse=True):
-            del self.elements[i]
 
         self.place_walls()
 
@@ -284,11 +239,11 @@ class PARTY:
                     pygame.draw.rect(screen, grass_color, grass_rect)
 
     def scores(self):
-        for (i,snake) in enumerate(self.elements):
-            if snake.id//100*100 != snake_group_id:
+        for snake in self.elements.values():
+            if snake.type != "snake":
                continue
 
-            num_player = snake.id%100
+            num_player = snake.player_number
 
             score_text = str(len(snake.body) - default_length_snake)
             score_surface = game_font.render(score_text, True, score_color)

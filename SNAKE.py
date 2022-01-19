@@ -1,6 +1,6 @@
 import pygame, random
 from pygame.math import Vector2
-from init import screen, cell_size, default_length_snake, snake_group_id
+from init import screen, cell_size, default_length_snake
 from ELEMENT import ELEMENT
 from FIRE import FIRE
 
@@ -16,12 +16,17 @@ class SNAKE(ELEMENT):
         }
 
         self.length = default_length_snake
-        self.group_id = snake_group_id
+        self.player_number = 0
+
+        self.type = "snake"
 
         self.reset()
 
         # Son quand le serpent mange une pomme
         self.eating_sound = pygame.mixer.Sound('sounds/crack.wav')
+
+    def set_player_number(self,player_number):
+        self.player_number = player_number
 
     def get_image(self,name):
         key = name+'_ghosted' if self.ghost_activated == True else name
@@ -41,7 +46,7 @@ class SNAKE(ELEMENT):
         self.fire = None
         self.direction = Vector2(0,0)
         self.new_block = 0
-        self.collisionned_block = 0
+        self.collisionned_entity = 0
 
     def draw(self):
         self.update_head_graphisms()
@@ -101,15 +106,15 @@ class SNAKE(ELEMENT):
         else:
             to_loop = 1+min(-1*self.new_block, len(self.body)-default_length_snake)
             for i in range(to_loop):
-                if self.party.tab[int(self.body[-1].y)][int(self.body[-1].x)] == self.id:
+                if self.party.tab[int(self.body[-1].y)][int(self.body[-1].x)] != 0 and self.party.tab[int(self.body[-1].y)][int(self.body[-1].x)].id == self.id:
                     self.party.tab[int(self.body[-1].y)][int(self.body[-1].x)] = 0
                 body_copy = body_copy[:-1]
             if self.new_block < 0:
                 self.new_block = 0
 
         body_copy.insert(0,body_copy[0] + self.direction)
-        self.collisionned_block = self.party.tab[int(body_copy[0].y)][int(body_copy[0].x)]
-        self.party.tab[int(body_copy[0].y)][int(body_copy[0].x)] = self.id
+        self.collisionned_entity = self.party.tab[int(body_copy[0].y)][int(body_copy[0].x)]
+        self.party.tab[int(body_copy[0].y)][int(body_copy[0].x)] = self
 
         self.body = body_copy[:]
 
@@ -128,15 +133,13 @@ class SNAKE(ELEMENT):
     def create_fire(self):
         if self.fire == None:
             fire = FIRE(self.party,self)
-            fire.auto_set_id()
-            self.party.elements.append(fire)
             fire.place()
             self.fire = fire
         self.lost_fire_in = random.randint(1,2)
 
     def remove_fire(self):
         self.fire.reset()
-        self.party.delete_element_by_id(self.fire.id)
+        self.fire.delete()
         self.fire = None
 
     def collision(self,snake):
