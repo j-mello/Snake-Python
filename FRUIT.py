@@ -7,7 +7,7 @@ class FRUIT(ELEMENT):
         super().__init__(party)
         self.group_id = fruit_group_id
         self.place_randomly_when_shrink = True
-        self.super_fruit = False
+        self.special_fruit = False
 
         self.icon = fruit_icon
 
@@ -22,6 +22,7 @@ class FRUIT(ELEMENT):
         self.party.set_dynamic_wall()
         self.party.shrink_grill()
 
-        # rendre le serpent plus grand
-        snake.add_block()
         snake.collisionned_block = 0
+        if self.special_fruit == False:
+            # rendre le serpent plus grand
+            snake.add_block()

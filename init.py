@@ -15,6 +15,7 @@ score_color = (56,74,12)
 
 fruit_icon = pygame.image.load('graphisms/apple.png').convert_alpha()
 super_fruit_icon = pygame.image.load('graphisms/super_apple.png').convert_alpha()
+bad_fruit_icon = pygame.image.load('graphisms/bad_apple.png').convert_alpha()
 tonic_icon = pygame.image.load('graphisms/tonic.png').convert_alpha()
 wormhole_icon = pygame.image.load('graphisms/wormhole.png').convert_alpha()
 wall_icon = pygame.image.load('graphisms/wall.png').convert_alpha()
@@ -22,10 +23,10 @@ ghost_wall_icon = pygame.image.load('graphisms/wall.png').convert_alpha()
 ghost_wall_icon.set_alpha(100)
 
 #Afficher aléatoirement des murs dans le niveau
-nb_random_walls = 0
+nb_random_walls = 3
 
 #Afficher aléatoirement de nouveaux murs supplémentaire à chaque fruit mangé
-new_random_walls_at_each_new_fruit = False
+new_random_walls_at_each_new_fruit = True
 
 #Le nombre de trous de ver
 nb_wormholes = 1
@@ -34,7 +35,9 @@ nb_wormholes = 1
 use_tonic_grills = True
 
 #Depuis diminuer la tailler du niveau régulièrement
-periodically_shrink_grill = 1
+periodically_shrink_grill = 2
+
+use_bad_fruit = True
 
 
 

@@ -1,6 +1,7 @@
-from init import screen, game_font, cell_number, cell_size, fruit_icon, grass_color, score_color, pygame, default_length_snake, fruit_group_id, snake_group_id, wall_group_id, wormhole_group_id, ghostwall_group_id, tonic_group_id, nb_random_walls, nb_wormholes, use_tonic_grills, new_random_walls_at_each_new_fruit, periodically_shrink_grill
+from init import screen, game_font, cell_number, cell_size, fruit_icon, grass_color, score_color, pygame, default_length_snake, fruit_group_id, snake_group_id, wall_group_id, wormhole_group_id, ghostwall_group_id, tonic_group_id, nb_random_walls, nb_wormholes, use_tonic_grills, new_random_walls_at_each_new_fruit, periodically_shrink_grill, use_bad_fruit
 from FRUIT import FRUIT
 from SUPER_FRUIT import SUPER_FRUIT
+from BAD_FRUIT import BAD_FRUIT
 from WALL import WALL
 from TONIC_GRILL import TONIC_GRILL
 from WORMHOLE import WORMHOLE
@@ -27,7 +28,7 @@ class PARTY:
         for i in range(nb_random_walls):
             wall = WALL(self,random.randint(3,6))
             wall.randomly = True
-            wall.set_id(4+nb_static_walls)
+            wall.set_id(4+i)
             self.elements.append(wall)
 
 
@@ -36,7 +37,7 @@ class PARTY:
             snake.set_id(id)
             self.elements.append(snake)
 
-            fruit = FRUIT(self) if random.randint(0,4) <= 3 else SUPER_FRUIT(self)
+            fruit = FRUIT(self)
             fruit.set_id(id)
             self.elements.append(fruit)
 
@@ -63,13 +64,13 @@ class PARTY:
         fruit.reset()
         p = random.randint(0,4)
 
-        c = (1 if fruit.super_fruit == True else 0)*2 + (1 if p <= 3 else 0)
+        c = (1 if fruit.special_fruit == True else 0)*2 + (1 if p <= 3 else 0)
 
         if c == 1 or c == 2:
             fruit.place_randomly()
         else:
             self.delete_element_by_id(fruit.id)
-            new_fruit = FRUIT(self) if fruit.super_fruit == True else SUPER_FRUIT(self)
+            new_fruit = FRUIT(self) if fruit.special_fruit == True else (SUPER_FRUIT(self) if use_bad_fruit == False or random.randint(0,1) == 0 else BAD_FRUIT(self))
             new_fruit.set_id(fruit.id%100)
             new_fruit.place_randomly()
             self.elements.append(new_fruit)
@@ -121,7 +122,8 @@ class PARTY:
                 return
 
             if snake.collisionned_block != 0:
-                element = self.get_element_by_id(snake.collisionned_block)[0]
+                t = self.get_element_by_id(snake.collisionned_block)
+                element = None if t == None else t[0]
                 if element != None and element.collision(snake) == False:
                     return
 
@@ -179,9 +181,10 @@ class PARTY:
 
     def shift_element(self,element,index,to_shift,to_deletes):
         old_body = [Vector2(block.x,block.y) for block in element.body]
+        element.pos -= to_shift
         for block in element.body:
             block -= to_shift
-            if block.x < 1 or block.y < 1 or (self.tab[int(block.y)][int(block.x)] != 0 and self.tab[int(block.y)][int(block.x)] != element.id):
+            if block.x < element.limit_spawn or block.y < element.limit_spawn or (self.tab[int(block.y)][int(block.x)] != 0 and self.tab[int(block.y)][int(block.x)] != element.id):
                 if element.id//100*100 != snake_group_id:
                     element.reset()
                     to_deletes.append(index)
