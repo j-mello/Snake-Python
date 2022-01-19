@@ -1,7 +1,8 @@
-import pygame
+import pygame, random
 from pygame.math import Vector2
 from init import screen, cell_size, default_length_snake, snake_group_id
 from ELEMENT import ELEMENT
+from FIRE import FIRE
 
 class SNAKE(ELEMENT):
     def __init__(self,UP_KEY,DOWN_KEY,RIGHT_KEY,LEFT_KEY):
@@ -36,6 +37,8 @@ class SNAKE(ELEMENT):
         super().reset()
         self.lost_ghost_in = 0
         self.ghost_activated = False
+        self.lost_fire_in = 0
+        self.fire = None
         self.direction = Vector2(0,0)
         self.new_block = 0
         self.collisionned_block = 0
@@ -110,6 +113,9 @@ class SNAKE(ELEMENT):
 
         self.body = body_copy[:]
 
+        if self.fire != None:
+            self.fire.place()
+
     def add_block(self, n = 1):
         self.new_block += n
 
@@ -118,6 +124,20 @@ class SNAKE(ELEMENT):
 
     def play_eating_sound(self):
         self.eating_sound.play()
+
+    def create_fire(self):
+        if self.fire == None:
+            fire = FIRE(self.party,self)
+            fire.auto_set_id()
+            self.party.elements.append(fire)
+            fire.place()
+            self.fire = fire
+        self.lost_fire_in = random.randint(1,2)
+
+    def remove_fire(self):
+        self.fire.reset()
+        self.party.delete_element_by_id(self.fire.id)
+        self.fire = None
 
     def collision(self,snake):
         if self.id != snake.id or self.ghost_activated == False:

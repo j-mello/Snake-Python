@@ -1,7 +1,8 @@
-from init import screen, game_font, cell_number, cell_size, fruit_icon, grass_color, score_color, pygame, default_length_snake, fruit_group_id, snake_group_id, wall_group_id, wormhole_group_id, ghostwall_group_id, tonic_group_id, nb_random_walls, nb_wormholes, use_tonic_grills, new_random_walls_at_each_new_fruit, periodically_shrink_grill, use_super_fruit, use_bad_fruit, use_ghost_fruit
+from init import screen, game_font, cell_number, cell_size, fruit_icon, grass_color, score_color, pygame, default_length_snake, fruit_group_id, snake_group_id, wall_group_id, wormhole_group_id, ghostwall_group_id, tonic_group_id, fire_group_id, nb_random_walls, nb_wormholes, use_tonic_grills, new_random_walls_at_each_new_fruit, periodically_shrink_grill, use_super_fruit, use_bad_fruit, use_ghost_fruit, use_fire_fruit
 from FRUIT import FRUIT
 from SUPER_FRUIT import SUPER_FRUIT
 from BAD_FRUIT import BAD_FRUIT
+from FIRE_FRUIT import FIRE_FRUIT
 from GHOST_FRUIT import GHOST_FRUIT
 from WALL import WALL
 from TONIC_GRILL import TONIC_GRILL
@@ -64,7 +65,7 @@ class PARTY:
     def place_new_fruit(self,fruit):
         fruit.reset()
 
-        c = (1 if fruit.special_fruit == True else 0)*2 + (1 if random.randint(0,4) <= 3 or (use_bad_fruit == False and use_super_fruit == False and use_ghost_fruit == False) else 0)
+        c = (1 if fruit.special_fruit == True else 0)*2 + (1 if random.randint(0,4) <= 3 or all(fruit_to_use == False for fruit_to_use in (use_bad_fruit,use_super_fruit,use_ghost_fruit,use_fire_fruit)) else 0)
 
         if c == 1 or c == 2:
             fruit.place_randomly()
@@ -80,6 +81,8 @@ class PARTY:
                     possibles_fruits.append(BAD_FRUIT)
                 if use_ghost_fruit == True:
                     possibles_fruits.append(GHOST_FRUIT)
+                if use_fire_fruit == True:
+                    possibles_fruits.append(FIRE_FRUIT)
 
                 fruit_class = possibles_fruits[random.randint(0,len(possibles_fruits)-1)]
                 new_fruit = fruit_class(self)
@@ -98,7 +101,7 @@ class PARTY:
             if type == snake_group_id or type == fruit_group_id or type == wormhole_group_id or (type == wall_group_id and element.randomly == True):
                 element.reset()
                 element.place_randomly()
-            elif type == ghostwall_group_id or type == wall_group_id or type == tonic_group_id:
+            elif any(type == group_id for group_id in (ghostwall_group_id,wall_group_id,tonic_group_id,fire_group_id)):
                 element.reset()
                 to_deletes.append(i)
 

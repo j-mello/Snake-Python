@@ -27,6 +27,11 @@ class FRUIT(ELEMENT):
         elif snake.ghost_activated == True:
             snake.ghost_activated = False
 
+        if snake.lost_fire_in > 0:
+            snake.lost_fire_in -= 1
+        elif snake.fire != None:
+            snake.remove_fire()
+
         snake.collisionned_block = 0
         if self.special_fruit == False:
             # rendre le serpent plus grand

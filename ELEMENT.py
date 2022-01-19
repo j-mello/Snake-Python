@@ -16,7 +16,8 @@ class ELEMENT:
 
     def reset(self):
         for block in self.body:
-            self.party.tab[int(block.y)][int(block.x)] = 0
+            if self.party.tab[int(block.y)][int(block.x)] == self.id:
+                self.party.tab[int(block.y)][int(block.x)] = 0
         self.body = []
         self.orientation = Vector2(0,0)
 

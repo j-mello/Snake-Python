@@ -17,6 +17,8 @@ fruit_icon = pygame.image.load('graphisms/apple.png').convert_alpha()
 ghost_fruit_icon = pygame.image.load('graphisms/ghost_apple.png').convert_alpha()
 super_fruit_icon = pygame.image.load('graphisms/super_apple.png').convert_alpha()
 bad_fruit_icon = pygame.image.load('graphisms/bad_apple.png').convert_alpha()
+fire_fruit_icon = pygame.image.load('graphisms/fire_apple.png').convert_alpha()
+fire_icon = pygame.image.load('graphisms/fire.png').convert_alpha()
 tonic_icon = pygame.image.load('graphisms/tonic.png').convert_alpha()
 wormhole_icon = pygame.image.load('graphisms/wormhole.png').convert_alpha()
 wall_icon = pygame.image.load('graphisms/wall.png').convert_alpha()
@@ -42,7 +44,9 @@ use_super_fruit = False
 
 use_bad_fruit = False
 
-use_ghost_fruit = True
+use_ghost_fruit = False
+
+use_fire_fruit = True
 
 
 
@@ -64,3 +68,6 @@ wormhole_group_id = 500
 
 # Les ids des murs fantomes irons de 600 à 699
 ghostwall_group_id = 600
+
+# Les ids des auras feu irons de 700 à 799
+fire_group_id = 700
