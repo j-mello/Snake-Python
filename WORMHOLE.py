@@ -52,6 +52,10 @@ class WORMHOLE(ELEMENT):
         dstPos += snake.direction
 
         self.party.tab[int(srcPos.y)][int(srcPos.x)] = self.id
+        if self.party.tab[int(dstPos.y)][int(dstPos.x)] != 0:
+            element = self.party.get_element_by_id(self.party.tab[int(dstPos.y)][int(dstPos.x)])[0]
+            if element.collision(snake) == False:
+                return False
         self.party.tab[int(dstPos.y)][int(dstPos.x)] = snake.id
 
         snake.body[0] = dstPos

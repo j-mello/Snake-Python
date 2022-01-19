@@ -35,7 +35,9 @@ nb_wormholes = 1
 use_tonic_grills = True
 
 #Depuis diminuer la tailler du niveau régulièrement
-periodically_shrink_grill = 2
+periodically_shrink_grill = 0
+
+use_super_fruit = True
 
 use_bad_fruit = True
 

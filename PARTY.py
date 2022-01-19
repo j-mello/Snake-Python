@@ -1,4 +1,4 @@
-from init import screen, game_font, cell_number, cell_size, fruit_icon, grass_color, score_color, pygame, default_length_snake, fruit_group_id, snake_group_id, wall_group_id, wormhole_group_id, ghostwall_group_id, tonic_group_id, nb_random_walls, nb_wormholes, use_tonic_grills, new_random_walls_at_each_new_fruit, periodically_shrink_grill, use_bad_fruit
+from init import screen, game_font, cell_number, cell_size, fruit_icon, grass_color, score_color, pygame, default_length_snake, fruit_group_id, snake_group_id, wall_group_id, wormhole_group_id, ghostwall_group_id, tonic_group_id, nb_random_walls, nb_wormholes, use_tonic_grills, new_random_walls_at_each_new_fruit, periodically_shrink_grill, use_super_fruit, use_bad_fruit
 from FRUIT import FRUIT
 from SUPER_FRUIT import SUPER_FRUIT
 from BAD_FRUIT import BAD_FRUIT
@@ -62,15 +62,22 @@ class PARTY:
 
     def place_new_fruit(self,fruit):
         fruit.reset()
-        p = random.randint(0,4)
 
-        c = (1 if fruit.special_fruit == True else 0)*2 + (1 if p <= 3 else 0)
+        c = (1 if fruit.special_fruit == True else 0)*2 + (1 if random.randint(0,4) <= 3 or (use_bad_fruit == False and use_super_fruit == False) else 0)
 
         if c == 1 or c == 2:
             fruit.place_randomly()
         else:
             self.delete_element_by_id(fruit.id)
-            new_fruit = FRUIT(self) if fruit.special_fruit == True else (SUPER_FRUIT(self) if use_bad_fruit == False or random.randint(0,1) == 0 else BAD_FRUIT(self))
+            if fruit.special_fruit == True:
+                new_fruit = FRUIT(self)
+            elif use_bad_fruit == True and use_super_fruit == True:
+                new_fruit = SUPER_FRUIT(self) if random.randint(0,1) == 0 else BAD_FRUIT(self)
+            elif use_super_fruit == True:
+                new_fruit = SUPER_FRUIT(self)
+            else:
+                new_fruit = BAD_FRUIT(self)
+
             new_fruit.set_id(fruit.id%100)
             new_fruit.place_randomly()
             self.elements.append(new_fruit)

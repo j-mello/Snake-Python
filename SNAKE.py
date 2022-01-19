@@ -108,7 +108,8 @@ class SNAKE(ELEMENT):
         else:
             to_loop = 1+min(-1*self.new_block, len(self.body)-default_length_snake)
             for i in range(to_loop):
-                self.party.tab[int(self.body[-1].y)][int(self.body[-1].x)] = 0
+                if self.party.tab[int(self.body[-1].y)][int(self.body[-1].x)] == self.id:
+                    self.party.tab[int(self.body[-1].y)][int(self.body[-1].x)] = 0
                 body_copy = body_copy[:-1]
             if self.new_block < 0:
                 self.new_block = 0

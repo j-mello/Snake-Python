@@ -1,5 +1,5 @@
 from pygame.math import Vector2
-from init import cell_size, screen, pygame, wall_group_id
+from init import cell_size, screen, pygame, fruit_group_id
 import random
 
 class ELEMENT:
@@ -53,7 +53,6 @@ class ELEMENT:
             pos = Vector2(pos_x,pos_y)
             if (self.check_random_placement(orientation,pos,self.length) == True):
                 break
-
         self.place(pos,orientation)
 
     def check_random_placement(self,orientation,pos,length):
