@@ -72,5 +72,5 @@ class ELEMENT:
             screen.blit(self.icon,block_rect)
 
     def collision(self,snake):
-        self.party.game_over()
+        self.party.game_over(snake)
         return False

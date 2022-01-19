@@ -32,7 +32,7 @@ class FIRE(ELEMENT):
 
     def collision(self,snake):
         if snake.id != self.snake.id:
-            self.party.game_over()
+            self.party.game_over(snake)
             return False
         return True
 

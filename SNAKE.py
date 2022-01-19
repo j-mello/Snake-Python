@@ -17,6 +17,7 @@ class SNAKE(ELEMENT):
 
         self.length = default_length_snake
         self.player_number = 0
+        self.score = 0
 
         self.type = "snake"
 
@@ -40,12 +41,12 @@ class SNAKE(ELEMENT):
 
     def reset(self):
         super().reset()
+        self.alive = True
         self.lost_ghost_in = 0
         self.ghost_activated = False
         self.lost_fire_in = 0
         self.fire = None
         self.direction = Vector2(0,0)
-        self.new_block = 0
         self.collisionned_entity = 0
 
     def draw(self):
@@ -96,21 +97,24 @@ class SNAKE(ELEMENT):
         elif tail_relation == Vector2(0,1): self.tail = self.get_image('tail_up')
         elif tail_relation == Vector2(0,-1): self.tail = self.get_image('tail_down')
 
+
+    def set_party(self,party):
+        self.party = party
+        self.auto_set_id()
+        self.party.players[self.player_number] = self
+
     def move_snake(self):
         if self.direction == Vector2(0,0):
             return
 
         body_copy = self.body[:]
-        if self.new_block > 0:
-            self.new_block -= 1
-        else:
-            to_loop = 1+min(-1*self.new_block, len(self.body)-default_length_snake)
+        blocks_to_add = self.score-(len(self.body)-default_length_snake)
+        if blocks_to_add <= 0:
+            to_loop = 1+min(-1*blocks_to_add, len(self.body)-default_length_snake)
             for i in range(to_loop):
                 if self.party.tab[int(self.body[-1].y)][int(self.body[-1].x)] != 0 and self.party.tab[int(self.body[-1].y)][int(self.body[-1].x)].id == self.id:
                     self.party.tab[int(self.body[-1].y)][int(self.body[-1].x)] = 0
                 body_copy = body_copy[:-1]
-            if self.new_block < 0:
-                self.new_block = 0
 
         body_copy.insert(0,body_copy[0] + self.direction)
         self.collisionned_entity = self.party.tab[int(body_copy[0].y)][int(body_copy[0].x)]
@@ -122,10 +126,10 @@ class SNAKE(ELEMENT):
             self.fire.place()
 
     def add_block(self, n = 1):
-        self.new_block += n
+        self.score += n
 
     def remove_block(self, n = 1):
-        self.new_block -= n
+        self.score = max(0,self.score-1)
 
     def play_eating_sound(self):
         self.eating_sound.play()
@@ -138,12 +142,21 @@ class SNAKE(ELEMENT):
         self.lost_fire_in = random.randint(1,2)
 
     def remove_fire(self):
-        self.fire.reset()
-        self.fire.delete()
-        self.fire = None
+        if self.fire != None:
+            self.fire.reset()
+            self.fire.delete()
+            self.fire = None
+
+    def kill(self):
+        self.delete()
+        self.alive = False
+
+    def delete(self):
+        self.remove_fire()
+        super().delete()
 
     def collision(self,snake):
         if self.id != snake.id or self.ghost_activated == False:
-            self.party.game_over()
+            self.party.game_over(snake)
             return False
         return True
