@@ -1,5 +1,5 @@
 from ELEMENT import ELEMENT
-from init import wormhole_icon
+from config import wormhole_icon
 import random
 from pygame.math import Vector2
 

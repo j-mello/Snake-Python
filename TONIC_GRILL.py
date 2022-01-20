@@ -1,6 +1,6 @@
 from ELEMENT import ELEMENT
 from pygame.math import Vector2
-from init import pygame, tonic_icon
+from config import pygame, tonic_icon
 
 class TONIC_GRILL(ELEMENT):
 

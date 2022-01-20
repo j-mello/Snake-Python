@@ -1,6 +1,7 @@
 import pygame, random
 from pygame.math import Vector2
-from init import screen, cell_size, default_length_snake
+from config import cell_size, default_length_snake
+from init import screen
 from ELEMENT import ELEMENT
 from FIRE import FIRE
 

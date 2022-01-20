@@ -1,5 +1,5 @@
 import random
-from init import ghost_fruit_icon
+from config import ghost_fruit_icon
 from FRUIT import FRUIT
 
 class GHOST_FRUIT(FRUIT):

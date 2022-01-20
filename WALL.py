@@ -1,4 +1,4 @@
-from init import wall_icon, pygame
+from config import wall_icon, pygame
 from ELEMENT import ELEMENT
 
 class WALL(ELEMENT):

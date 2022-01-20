@@ -1,5 +1,6 @@
 from pygame.math import Vector2
-from init import cell_size, screen, pygame
+from config import cell_size, pygame
+from init import screen
 import random
 
 class ELEMENT:

@@ -1,4 +1,4 @@
-from init import fire_icon
+from config import fire_icon
 from pygame.math import Vector2
 import json
 from ELEMENT import ELEMENT

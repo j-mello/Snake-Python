@@ -1,5 +1,5 @@
 from ELEMENT import ELEMENT
-from init import ghost_wall_icon
+from config import ghost_wall_icon
 import random
 
 class GHOST_WALL(ELEMENT):

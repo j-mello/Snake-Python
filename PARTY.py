@@ -1,4 +1,5 @@
-from init import screen, game_font, cell_number, cell_size, fruit_icon, skull_icon, grass_color, score_color, pygame, default_length_snake, nb_random_walls, nb_wormholes, use_tonic_grills, new_random_walls_at_each_new_fruit, periodically_shrink_grill, use_super_fruit, use_bad_fruit, use_ghost_fruit, use_fire_fruit
+from config import game_font, cell_number, cell_size, fruit_icon, skull_icon, grass_color, score_color, pygame, default_length_snake, nb_random_walls, nb_wormholes, use_tonic_grills, new_random_walls_at_each_new_fruit, periodically_shrink_grill, use_super_fruit, use_bad_fruit, use_ghost_fruit, use_fire_fruit
+from init import screen
 from FRUIT import FRUIT
 from SUPER_FRUIT import SUPER_FRUIT
 from BAD_FRUIT import BAD_FRUIT
@@ -252,10 +253,12 @@ class PARTY:
                 obj = json.loads(file.read())
         except FileNotFoundError:
             obj = {}
+
         for num,player in self.players.items():
             if not str(num+1) in obj:
                 obj[str(num+1)] = []
             obj[str(num+1)].append(player.score)
+
         with open(file_name, 'w') as file:
             file.write(json.dumps(obj))
 

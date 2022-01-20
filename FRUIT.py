@@ -1,5 +1,5 @@
 import random
-from init import fruit_icon
+from config import fruit_icon
 from ELEMENT import ELEMENT
 
 class FRUIT(ELEMENT):

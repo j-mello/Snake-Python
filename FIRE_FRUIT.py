@@ -1,5 +1,5 @@
 import random
-from init import fire_fruit_icon
+from config import fire_fruit_icon
 from FRUIT import FRUIT
 
 class FIRE_FRUIT(FRUIT):

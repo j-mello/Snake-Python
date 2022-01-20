@@ -1,21 +1,19 @@
 import sys
 from PARTY import PARTY
 from SNAKE import SNAKE
-from init import screen, pygame
-from pygame.math import Vector2
+from init import screen, pygame, SCREEN_UPDATE
+from menu import menu
 
-clock = pygame.time.Clock()
+menu()
+exit()
+
+from pygame.math import Vector2
 
 snake = SNAKE(pygame.K_UP,pygame.K_DOWN,pygame.K_RIGHT,pygame.K_LEFT)
 snake2 = SNAKE(pygame.K_z,pygame.K_s,pygame.K_d,pygame.K_q)
 snake3 = SNAKE(pygame.K_y,pygame.K_h,pygame.K_j,pygame.K_g)
 
 party = PARTY(snake,snake2,snake3)
-
-SCREEN_UPDATE = pygame.USEREVENT #creation d'un event
-pygame.time.set_timer(SCREEN_UPDATE, 150) #L'event sera trigger toutes les 150 millisecondes
-
-clock.tick(60) #La boucle s'exécute 60 fois par seconde, correspondant aux 60 FPS
 
 
 while True:
