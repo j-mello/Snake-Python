@@ -29,10 +29,13 @@ while True:
             party.draw_elements()
             party.display_update()
         if event.type == pygame.KEYDOWN:
-            for snake in party.elements.values():
-                if snake.type != "snake":
-                    continue
-                for (key,new_direction) in snake.KEYS.items():
-                    if event.key == key and snake.orientation != new_direction*(-1):
-                        snake.direction = new_direction
-                        snake.orientation = new_direction
+            if party.playing:
+                for snake in party.elements.values():
+                    if snake.type != "snake":
+                        continue
+                    for (key,new_direction) in snake.KEYS.items():
+                        if event.key == key and snake.orientation != new_direction*(-1):
+                            snake.direction = new_direction
+                            snake.orientation = new_direction
+            elif event.key == pygame.K_RETURN:
+                party.reset()

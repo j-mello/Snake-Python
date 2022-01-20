@@ -9,6 +9,7 @@ from TONIC_GRILL import TONIC_GRILL
 from WORMHOLE import WORMHOLE
 from GHOST_WALL import GHOST_WALL
 import random
+import json
 
 from pygame.math import Vector2
 import random
@@ -47,6 +48,7 @@ class PARTY:
 
     def reset(self):
         self.cell_number = cell_number
+        self.playing = True
         self.tab = [[0]*cell_number for i in range(cell_number)]
         to_deletes = []
         for element in self.elements.values():
@@ -127,7 +129,7 @@ class PARTY:
             if snake.type != "snake":
                 continue
 
-            if not 0 <= snake.body[0].x < self.cell_number or not 0 <= snake.body[0].y < self.cell_number:
+            if len(snake.body) == 0 or not 0 <= snake.body[0].x < self.cell_number or not 0 <= snake.body[0].y < self.cell_number:
                 self.game_over(snake)
                 return
 
@@ -237,7 +239,25 @@ class PARTY:
         snake.kill()
         alive_players = sum([1 for player in self.players.values() if player.alive])
         if alive_players <= 1:
-            self.reset()
+            for snake in self.players.values():
+                snake.direction = Vector2(0,0)
+            self.save_scores()
+            self.playing = False
+
+
+    def save_scores(self):
+        file_name = "scores.json"
+        try:
+            with open(file_name, 'r') as file:
+                obj = json.loads(file.read())
+        except FileNotFoundError:
+            obj = {}
+        for num,player in self.players.items():
+            if not str(num+1) in obj:
+                obj[str(num+1)] = []
+            obj[str(num+1)].append(player.score)
+        with open(file_name, 'w') as file:
+            file.write(json.dumps(obj))
 
     def grass(self):
         for row in range(self.cell_number):
@@ -247,21 +267,38 @@ class PARTY:
                     pygame.draw.rect(screen, grass_color, grass_rect)
 
     def scores(self):
+        font = game_font if self.playing else pygame.font.Font('fonts/Marcha.ttf', int(50*self.cell_number/20))
+
+        if self.playing == False:
+            sentence_font = pygame.font.SysFont("comicsansms", int(35*self.cell_number/20))
+
+            sentence_text = "Appuyez sur entrer pour recommencer"
+            sentence_height = font.size(sentence_text)[1]
+
+            sentence_surface = sentence_font.render(sentence_text, True, score_color)
+            sentence_x = cell_size * self.cell_number / 2
+            sentence_y = cell_size * self.cell_number / 2 + sentence_height
+
+            sentence_rect = sentence_surface.get_rect(center = (sentence_x, sentence_y))
+
+            screen.blit(sentence_surface,sentence_rect)
+
+
         for (player_number,snake) in self.players.items():
 
             score_text = str(snake.score)
-            score_surface = game_font.render(score_text, True, score_color)
-            score_x = int(cell_size * self.cell_number - 60) - cell_size*3*player_number
-            score_y = int(cell_size * self.cell_number - 40)
+            score_surface = font.render(score_text, True, score_color)
+            score_x = int(cell_size * self.cell_number - 60) - cell_size * 3 * player_number if self.playing else int(cell_size * self.cell_number - 120*self.cell_number/20) - cell_size * 6*self.cell_number/20 * player_number
+            score_y = int(cell_size * self.cell_number - 40) if self.playing else int(cell_size * self.cell_number/2)
             score_rect = score_surface.get_rect(center = (score_x, score_y))
 
-            icon = fruit_icon if snake.alive else skull_icon
+            icon = fruit_icon if snake.alive or self.playing == False else skull_icon
             icon_rect = icon.get_rect(midright = (score_rect.left, score_rect.centery))
 
-            bg_rect = pygame.Rect(icon_rect.left, icon_rect.top,icon_rect.width + score_rect.width + 8 ,icon_rect.height + 4)
+            bg_rect = pygame.Rect(icon_rect.left, icon_rect.top - (0 if self.playing else 8), icon_rect.width + score_rect.width + 8 ,icon_rect.height + (4 if self.playing else 12))
 
-            who_surface = game_font.render(f"Joueur {player_number+1} : ", True, score_color)
-            who_rect = who_surface.get_rect(center = (score_x-cell_size/2, score_y-cell_size))
+            who_surface = font.render(f"Joueur {player_number+1} : ", True, score_color)
+            who_rect = who_surface.get_rect(center = (score_x-cell_size/2, score_y-( cell_size if self.playing else 1.5*cell_size ) ))
 
             pygame.draw.rect(screen,grass_color,bg_rect)
             screen.blit(who_surface,who_rect)
