@@ -6,6 +6,8 @@ from score_table.config import (
                     header_col_height,
                     title_bottom_margin,
                     title_top_margin,
+
+
                     back_button_x,
                     back_button_y,
                     back_button_width,
@@ -15,11 +17,31 @@ from score_table.config import (
                     back_button_bg_color,
                     back_button_border_color,
 
+                    delete_scores_button_x,
+                    delete_scores_button_y,
+                    delete_scores_button_width,
+                    delete_scores_button_height,
+                    delete_scores_button_text,
+                    delete_scores_button_text_color,
+                    delete_scores_button_bg_color,
+                    delete_scores_button_border_color,
+
                     title_text
                     )
 
 old_a = None
 old_b = None
+old_obj = {}
+
+def show_delete_scores_button():
+    surface = menu_font.render(delete_scores_button_text, True, delete_scores_button_text_color)
+    rect = surface.get_rect(center = (delete_scores_button_x+delete_scores_button_width/2,delete_scores_button_y+delete_scores_button_height/2))
+
+    bg_rect = pygame.Rect((delete_scores_button_x,delete_scores_button_y,delete_scores_button_width,delete_scores_button_height))
+
+    pygame.draw.rect(screen,delete_scores_button_bg_color,bg_rect)
+    pygame.draw.rect(screen,delete_scores_button_border_color,bg_rect, 2)
+    screen.blit(surface,rect)
 
 def show_back_button():
     surface = menu_font.render(back_button_text, True, back_button_text_color)
@@ -33,16 +55,18 @@ def show_back_button():
 
 
 def show_scores(obj,a,b):
-    global old_a, old_b
-    if a == old_a and b == old_b:
+    global old_a, old_b, old_obj
+    if a == old_a and b == old_b and len(obj.keys()) == len(old_obj.keys()):
         return
 
     screen.fill((200,200,200))
 
     old_a = a
     old_b = b
+    old_obj = obj
 
     show_back_button()
+    show_delete_scores_button()
 
     nb_players = len(obj.keys())
 
@@ -72,6 +96,11 @@ def show_scores(obj,a,b):
 
     for i in range(a,b):
         x = initial_x
+        num_text = str(i+1)
+        num_width,num_height = menu_font.size(num_text)
+        num_surface = menu_font.render(num_text, True, (0,0,0))
+        num_rect = num_surface.get_rect(center = (x-10,y+player_col_height/2))
+        screen.blit(num_surface,num_rect)
         for scores in obj.values():
             if i < len(scores):
                 score_surface = menu_font.render(str(scores[i]), True, (0,0,0))
@@ -84,5 +113,7 @@ def show_scores(obj,a,b):
                 screen.blit(score_surface,score_rect)
             x += player_col_width
         y += player_col_height
+    pygame.draw.line(screen, (0,0,0), (0,y),(menu_dimensions[0],y))
+
     pygame.display.update()
 
