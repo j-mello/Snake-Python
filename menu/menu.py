@@ -14,9 +14,10 @@ def menu():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                listen_buttons(mouse)
 
+
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                listen_buttons(mouse)
 
             if event.type == SCREEN_UPDATE:
                 display_buttons()

@@ -8,6 +8,7 @@ background_color = (175,215,70)
 grass_color = (167,209,61)
 score_color = (56,74,12)
 
+# Menu pour les options
 menu_dimensions = (854,480)
 menu_validate_button_margin = 75
 menu_y_margin = 50
@@ -15,7 +16,6 @@ menu_x_margin = 30
 menu_text_bottom_margin = 10
 menu_body_height = 50
 menu_font = pygame.font.SysFont("comicsansms", 15)
-settable_values_menu_font = pygame.font.SysFont("comicsansms", 15)
 
 fruit_icon = pygame.image.load('graphisms/apple.png').convert_alpha()
 skull_icon = pygame.image.load('graphisms/skull.png').convert_alpha()

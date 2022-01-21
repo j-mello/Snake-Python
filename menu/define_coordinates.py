@@ -4,7 +4,6 @@ from config import (menu_dimensions,
                    menu_validate_button_margin,
                    menu_body_height,
                    menu_font,
-                   settable_values_menu_font,
                    menu_text_bottom_margin)
 
 from menu.buttons import buttons, validate_button
@@ -22,7 +21,7 @@ def define_coordinates():
             x = 40
             y += menu_body_height+menu_y_margin
 
-        settable_value_width,settable_value_height = settable_values_menu_font.size(max(button["get"](),"99"))
+        settable_value_width,settable_value_height = menu_font.size(max(button["get"](),"99"))
         settable_value_rect_center = (x+text_width/2, y+text_height+6+menu_text_bottom_margin+settable_value_height/2)
         settable_value_bg_rect_params = (settable_value_rect_center[0]-settable_value_width/2-3, settable_value_rect_center[1]-settable_value_height/2-3, settable_value_width+6, settable_value_height+6)
         global_bg_rect_params = (x-3, y-3 , max(text_width,settable_value_width)+6 , text_height+3+menu_body_height)
@@ -68,7 +67,7 @@ def define_coordinates():
                                    }
                      }
         x += text_width+menu_x_margin
-    validate_button_text_width, validate_button_text_height = settable_values_menu_font.size(validate_button["name"])
+    validate_button_text_width, validate_button_text_height = menu_font.size(validate_button["name"])
 
 
     for button in buttons[::-1]:

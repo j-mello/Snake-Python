@@ -1,5 +1,5 @@
 from init import pygame, screen
-from config import menu_font, settable_values_menu_font
+from config import menu_font
 from menu.buttons import buttons, validate_button
 
 def display_buttons(): # update screen only if a value has changed
@@ -20,7 +20,7 @@ def display_buttons(): # update screen only if a value has changed
         button["old_value"] = settable_value_text
 
         settable_value_width, settable_value_height = [button[k] for k in ("settable_value_width", "settable_value_height")]
-        settable_value_surface = settable_values_menu_font.render(settable_value_text, True, (0,0,0))
+        settable_value_surface = menu_font.render(settable_value_text, True, (0,0,0))
         settable_value_rect_center = button["settable_value_rect_center"]
         settable_value_rect = settable_value_surface.get_rect(center = settable_value_rect_center)
 
@@ -79,7 +79,7 @@ def display_buttons(): # update screen only if a value has changed
                                         "validate_button_bg_rect_params"
                                      )]
 
-    validate_button_surface = settable_values_menu_font.render(name,True,(255,255,255))
+    validate_button_surface = menu_font.render(name,True,(255,255,255))
     validate_button_rect = validate_button_surface.get_rect(center = (x_validate_button+validate_button_text_width/2, y_validate_button+validate_button_text_height/2))
 
     validate_button_bg_rect = pygame.Rect(*validate_button_bg_rect_params)
