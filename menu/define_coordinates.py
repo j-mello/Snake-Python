@@ -1,7 +1,7 @@
 from config import (menu_dimensions,
                    menu_y_margin,
                    menu_x_margin,
-                   menu_validate_button_y,
+                   menu_validate_button_margin,
                    menu_body_height,
                    menu_font,
                    settable_values_menu_font,
@@ -70,7 +70,12 @@ def define_coordinates():
         x += text_width+menu_x_margin
     validate_button_text_width, validate_button_text_height = settable_values_menu_font.size(validate_button["name"])
 
-    y_validate_button = buttons[-1]["y"]+buttons[-1]["global_bg_rect_params"][1]+menu_validate_button_y
+
+    for button in buttons[::-1]:
+        y_validate_button = button["y"]+button["global_bg_rect_params"][1]+menu_validate_button_margin
+        if y_validate_button < menu_dimensions[1]:
+            break
+
     x_validate_button = menu_dimensions[0]/2-validate_button_text_width/2
 
     validate_button_bg_rect_params = (x_validate_button-60,y_validate_button-20,validate_button_text_width+120, validate_button_text_height+40)

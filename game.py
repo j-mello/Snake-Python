@@ -2,17 +2,21 @@ import sys
 from PARTY import PARTY
 from elements.SNAKE import SNAKE
 from init import screen, pygame, SCREEN_UPDATE
-from config import cell_number,cell_size
+from config import cell_number, cell_size, config_game
 from pygame.math import Vector2
 
 def start_game():
     screen = pygame.display.set_mode((cell_number*cell_size,cell_number*cell_size))
 
-    snake = SNAKE(pygame.K_UP,pygame.K_DOWN,pygame.K_RIGHT,pygame.K_LEFT)
-    snake2 = SNAKE(pygame.K_z,pygame.K_s,pygame.K_d,pygame.K_q)
-    snake3 = SNAKE(pygame.K_y,pygame.K_h,pygame.K_j,pygame.K_g)
+    snakes = []
 
-    party = PARTY(snake,snake2,snake3)
+    snakes.append(SNAKE(pygame.K_UP,pygame.K_DOWN,pygame.K_RIGHT,pygame.K_LEFT))
+    if config_game["nb_players"] >= 2:
+        snakes.append(SNAKE(pygame.K_z,pygame.K_s,pygame.K_d,pygame.K_q))
+    if config_game["nb_players"] >= 3:
+        snakes.append(SNAKE(pygame.K_y,pygame.K_h,pygame.K_j,pygame.K_g))
+
+    party = PARTY(*snakes)
 
     while True:
         for event in pygame.event.get():

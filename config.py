@@ -9,13 +9,13 @@ grass_color = (167,209,61)
 score_color = (56,74,12)
 
 menu_dimensions = (854,480)
-menu_validate_button_y = 20
+menu_validate_button_margin = 75
 menu_y_margin = 50
 menu_x_margin = 30
-menu_text_bottom_margin = 20
-menu_body_height = 100
+menu_text_bottom_margin = 10
+menu_body_height = 50
 menu_font = pygame.font.SysFont("comicsansms", 15)
-settable_values_menu_font = pygame.font.SysFont("comicsansms", 20)
+settable_values_menu_font = pygame.font.SysFont("comicsansms", 15)
 
 fruit_icon = pygame.image.load('graphisms/apple.png').convert_alpha()
 skull_icon = pygame.image.load('graphisms/skull.png').convert_alpha()
@@ -33,6 +33,8 @@ ghost_wall_icon.set_alpha(100)
 
 
 config_game = {
+    #Le nombre de joueurs
+    "nb_players": 1,
 
     #Afficher aléatoirement des murs dans le niveau
     "nb_random_walls": 0,

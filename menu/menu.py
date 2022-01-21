@@ -1,12 +1,5 @@
 from init import pygame, screen, SCREEN_UPDATE
-from config import (menu_dimensions,
-                   menu_y_margin,
-                   menu_x_margin,
-                   menu_validate_button_y,
-                   menu_body_height,
-                   menu_font,
-                   settable_values_menu_font,
-                   menu_text_bottom_margin)
+from config import menu_dimensions
 from menu.buttons import buttons, validate_button
 from menu.define_coordinates import define_coordinates
 from menu.listen_buttons import listen_buttons
