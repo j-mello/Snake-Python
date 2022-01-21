@@ -30,25 +30,34 @@ wall_icon = pygame.image.load('graphisms/wall.png').convert_alpha()
 ghost_wall_icon = pygame.image.load('graphisms/wall.png').convert_alpha()
 ghost_wall_icon.set_alpha(100)
 
-#Afficher aléatoirement des murs dans le niveau
-nb_random_walls = 0
 
-#Afficher aléatoirement de nouveaux murs supplémentaire à chaque fruit mangé
-new_random_walls_at_each_new_fruit = False
 
-#Le nombre de trous de ver
-nb_wormholes = 1
+config_game = {
 
-#Remplacer les murs des coté, par des grilles qui téléportent de l'autre coté
-use_tonic_grills = False
+    #Afficher aléatoirement des murs dans le niveau
+    "nb_random_walls": 0,
 
-#Depuis diminuer la tailler du niveau régulièrement
-periodically_shrink_grill = 1
+    #Afficher aléatoirement de nouveaux murs supplémentaire à chaque fruit mangé
+    "new_random_walls_at_each_new_fruit": False,
 
-use_super_fruit = False
+    #Le nombre de trous de ver
+    "nb_wormholes": 0,
 
-use_bad_fruit = False
+    #Remplacer les murs des coté, par des grilles qui téléportent de l'autre coté
+    "use_tonic_grills": False,
 
-use_ghost_fruit = False
+    #Depuis diminuer la tailler du niveau régulièrement
+    "periodically_shrink_grill": 0,
 
-use_fire_fruit = False
+    #Activer les super fruits
+    "use_super_fruit": False,
+
+    #Activer les mauvais fruits
+    "use_bad_fruit": False,
+
+    #Activer les fruits fantômes
+    "use_ghost_fruit": False,
+
+    #Activer les fruits de feu
+    "use_fire_fruit": False
+}

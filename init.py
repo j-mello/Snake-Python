@@ -4,7 +4,6 @@ import pygame
 pygame.mixer.pre_init(44100,-16,2,512) # Précharge le son pour éviter un potentiel délai
 pygame.init()
 
-#screen = pygame.display.set_mode((cell_number*cell_size,cell_number*cell_size))
 screen = pygame.display.set_mode((854,480))
 
 clock = pygame.time.Clock()

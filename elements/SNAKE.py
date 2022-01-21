@@ -3,7 +3,7 @@ from pygame.math import Vector2
 from config import cell_size, default_length_snake
 from init import screen
 from ELEMENT import ELEMENT
-from FIRE import FIRE
+from elements.FIRE import FIRE
 
 class SNAKE(ELEMENT):
     def __init__(self,UP_KEY,DOWN_KEY,RIGHT_KEY,LEFT_KEY):

@@ -1,6 +1,6 @@
 import random
 from config import bad_fruit_icon
-from FRUIT import FRUIT
+from elements.FRUIT import FRUIT
 
 class BAD_FRUIT(FRUIT):
     def __init__(self, party):

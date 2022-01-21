@@ -1,14 +1,14 @@
-from config import game_font, cell_number, cell_size, fruit_icon, skull_icon, grass_color, score_color, pygame, default_length_snake, nb_random_walls, nb_wormholes, use_tonic_grills, new_random_walls_at_each_new_fruit, periodically_shrink_grill, use_super_fruit, use_bad_fruit, use_ghost_fruit, use_fire_fruit
+from config import game_font, cell_number, cell_size, fruit_icon, skull_icon, grass_color, score_color, pygame, default_length_snake, config_game
 from init import screen
-from FRUIT import FRUIT
-from SUPER_FRUIT import SUPER_FRUIT
-from BAD_FRUIT import BAD_FRUIT
-from FIRE_FRUIT import FIRE_FRUIT
-from GHOST_FRUIT import GHOST_FRUIT
-from WALL import WALL
-from TONIC_GRILL import TONIC_GRILL
-from WORMHOLE import WORMHOLE
-from GHOST_WALL import GHOST_WALL
+from elements.FRUIT import FRUIT
+from elements.SUPER_FRUIT import SUPER_FRUIT
+from elements.BAD_FRUIT import BAD_FRUIT
+from elements.FIRE_FRUIT import FIRE_FRUIT
+from elements.GHOST_FRUIT import GHOST_FRUIT
+from elements.WALL import WALL
+from elements.TONIC_GRILL import TONIC_GRILL
+from elements.WORMHOLE import WORMHOLE
+from elements.GHOST_WALL import GHOST_WALL
 import random
 import json
 
@@ -31,7 +31,7 @@ class PARTY:
         self.place_walls()
 
 
-        for i in range(nb_random_walls):
+        for i in range(config_game["nb_random_walls"]):
             wall = WALL(self,random.randint(3,6))
             wall.randomly = True
 
@@ -41,7 +41,7 @@ class PARTY:
             snake.set_party(self)
             fruit = FRUIT(self)
 
-        for id in range(nb_wormholes):
+        for id in range(config_game["nb_wormholes"]):
             wormhole = WORMHOLE(self)
 
         self.reset()
@@ -74,7 +74,7 @@ class PARTY:
 
     def place_walls(self):
         for  id,(pos,orientation) in enumerate([(Vector2(self.cell_number-1,0),Vector2(1,0)),(Vector2(self.cell_number-1,self.cell_number-1),Vector2(0,1)),(Vector2(0,self.cell_number-1),Vector2(-1,0)),(Vector2(0,0),Vector2(0,-1))]):
-            if use_tonic_grills == False:
+            if config_game["use_tonic_grills"] == False:
                 wall = WALL(self)
             else:
                 wall = TONIC_GRILL(self,'V' if id % 2 == 0 else 'H')
@@ -83,7 +83,7 @@ class PARTY:
     def place_new_fruit(self,fruit):
         fruit.reset()
 
-        c = (1 if fruit.special_fruit == True else 0)*2 + (1 if random.randint(0,4) <= 3 or all(fruit_to_use == False for fruit_to_use in (use_bad_fruit,use_super_fruit,use_ghost_fruit,use_fire_fruit)) else 0)
+        c = (1 if fruit.special_fruit == True else 0)*2 + (1 if random.randint(0,4) <= 3 or all(fruit_to_use == False for fruit_to_use in (config_game["use_bad_fruit"],config_game["use_super_fruit"],config_game["use_ghost_fruit"],config_game["use_fire_fruit"])) else 0)
 
         if c == 1 or c == 2:
             fruit.place_randomly()
@@ -93,13 +93,13 @@ class PARTY:
                 new_fruit = FRUIT(self)
             else:
                 possibles_fruits = []
-                if use_super_fruit == True:
+                if config_game["use_super_fruit"] == True:
                     possibles_fruits.append(SUPER_FRUIT)
-                if use_bad_fruit == True:
+                if config_game["use_bad_fruit"] == True:
                     possibles_fruits.append(BAD_FRUIT)
-                if use_ghost_fruit == True:
+                if config_game["use_ghost_fruit"] == True:
                     possibles_fruits.append(GHOST_FRUIT)
-                if use_fire_fruit == True:
+                if config_game["use_fire_fruit"] == True:
                     possibles_fruits.append(FIRE_FRUIT)
 
                 fruit_class = possibles_fruits[random.randint(0,len(possibles_fruits)-1)]
@@ -140,7 +140,7 @@ class PARTY:
                 snake.collisionned_entity = 0
 
     def set_dynamic_wall(self):
-        if new_random_walls_at_each_new_fruit == False:
+        if config_game["new_random_walls_at_each_new_fruit"] == False:
             return
 
         for element in list(self.elements.values()):
@@ -201,10 +201,10 @@ class PARTY:
 
 
     def shrink_grill(self):
-        if periodically_shrink_grill <= 0 or self.cell_number <= 10 or random.randint(0,1) == 0:
+        if config_game["periodically_shrink_grill"] <= 0 or self.cell_number <= 10 or random.randint(0,1) == 0:
             return
 
-        self.cell_number -= periodically_shrink_grill
+        self.cell_number -= config_game["periodically_shrink_grill"]
         for element in list(self.elements.values()):
             if (element.type == "wall" and element.randomly == False) or element.type == "tonic_grill":
                 element.delete()
@@ -231,7 +231,7 @@ class PARTY:
                     elif self.shift_element(element,to_shift) == False:
                         return
 
-        self.tab = [line[:-periodically_shrink_grill] for line in self.tab[:-periodically_shrink_grill]]
+        self.tab = [line[:-config_game["periodically_shrink_grill"]] for line in self.tab[:-config_game["periodically_shrink_grill"]]]
 
         self.place_walls()
 

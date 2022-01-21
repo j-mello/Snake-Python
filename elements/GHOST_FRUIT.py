@@ -1,6 +1,6 @@
 import random
 from config import ghost_fruit_icon
-from FRUIT import FRUIT
+from elements.FRUIT import FRUIT
 
 class GHOST_FRUIT(FRUIT):
     def __init__(self, party):
