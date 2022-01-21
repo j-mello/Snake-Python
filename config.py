@@ -9,6 +9,7 @@ grass_color = (167,209,61)
 score_color = (56,74,12)
 
 menu_dimensions = (854,480)
+menu_validate_button_y = 20
 menu_y_margin = 50
 menu_x_margin = 30
 menu_text_bottom_margin = 20
@@ -50,4 +51,4 @@ use_bad_fruit = False
 
 use_ghost_fruit = False
 
-use_fire_fruit = True
+use_fire_fruit = False

@@ -2,7 +2,7 @@ import sys
 from PARTY import PARTY
 from SNAKE import SNAKE
 from init import screen, pygame, SCREEN_UPDATE
-from menu import menu
+from menu.menu import menu
 
 menu()
 exit()
