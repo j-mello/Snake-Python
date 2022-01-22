@@ -287,13 +287,23 @@ class PARTY:
             screen.blit(sentence_surface,sentence_rect)
 
 
-        for (player_number,snake) in self.players.items():
+        nb_players = len(list(self.players.keys()))
 
+        who_text_width = font.size(f"Joueur 1 : ")[0]
+
+        if self.playing:
+            space_between_players = 3
+            score_x = cell_size * self.cell_number - cell_size * space_between_players * nb_players
+        else:
+            space_between_players = cell_size*self.cell_number/20
+            score_x = cell_size * self.cell_number/2 - (who_text_width*nb_players + space_between_players*(nb_players-1))/2
+        score_y = int(cell_size * self.cell_number - 40) if self.playing else int(cell_size * self.cell_number/2)
+
+        for (player_number,snake) in self.players.items():
             score_text = str(snake.score)
+            score_text_width = font.size(score_text)[0]
             score_surface = font.render(score_text, True, score_color)
-            score_x = int(cell_size * self.cell_number - 60) - cell_size * 3 * player_number if self.playing else int(cell_size * self.cell_number - 120*self.cell_number/20) - cell_size * 6*self.cell_number/20 * player_number
-            score_y = int(cell_size * self.cell_number - 40) if self.playing else int(cell_size * self.cell_number/2)
-            score_rect = score_surface.get_rect(center = (score_x, score_y))
+            score_rect = score_surface.get_rect(center = (score_x+score_text_width/2+who_text_width/2, score_y))
 
             icon = fruit_icon if snake.alive or self.playing == False else skull_icon
             icon_rect = icon.get_rect(midright = (score_rect.left, score_rect.centery))
@@ -301,10 +311,12 @@ class PARTY:
             bg_rect = pygame.Rect(icon_rect.left, icon_rect.top - (0 if self.playing else 8), icon_rect.width + score_rect.width + 8 ,icon_rect.height + (4 if self.playing else 12))
 
             who_surface = font.render(f"Joueur {player_number+1} : ", True, score_color)
-            who_rect = who_surface.get_rect(center = (score_x-cell_size/2, score_y-( cell_size if self.playing else 1.5*cell_size ) ))
+            who_rect = who_surface.get_rect(center = (score_x+who_text_width/2, score_y-( cell_size if self.playing else 1.5*cell_size ) ))
 
             pygame.draw.rect(screen,grass_color,bg_rect)
             screen.blit(who_surface,who_rect)
             screen.blit(score_surface, score_rect)
             screen.blit(icon, icon_rect)
             pygame.draw.rect(screen,score_color,bg_rect,2)
+
+            score_x += space_between_players+who_text_width
