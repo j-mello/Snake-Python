@@ -1,6 +1,7 @@
 from config import config_game
 
 from game import start_game
+import score_table.score_table
 
 def increment_nb_players(n):
     config_game["nb_players"] += n
@@ -39,6 +40,11 @@ def change_use_fire_fruit():
 validate_button = {
     "name": "Valider",
     "action": start_game
+}
+
+scores_button = {
+    "name": "Voir les scores",
+    "action": lambda: score_table.score_table.score_table()
 }
 
 buttons = [

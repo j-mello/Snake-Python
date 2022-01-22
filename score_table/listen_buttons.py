@@ -9,11 +9,11 @@ from score_table.config import (
                     delete_scores_button_width,
                     delete_scores_button_height
                     )
-from menu.menu import menu
+import menu.menu
 
 def listen_back_button(mouse):
     if back_button_x <= mouse[0] <= back_button_x+back_button_width and back_button_y <= mouse[1] <= back_button_y+back_button_height:
-        menu()
+        menu.menu.menu()
 
 
 def listen_delete_scores_button(mouse):
@@ -21,4 +21,4 @@ def listen_delete_scores_button(mouse):
         with open("scores.json", "w") as file:
             file.write("{}")
         return True
-    return True
+    return False

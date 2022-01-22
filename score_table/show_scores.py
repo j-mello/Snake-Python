@@ -54,9 +54,9 @@ def show_back_button():
     screen.blit(surface,rect)
 
 
-def show_scores(obj,a,b):
+def show_scores(obj,a,b,first_display):
     global old_a, old_b, old_obj
-    if a == old_a and b == old_b and len(obj.keys()) == len(old_obj.keys()):
+    if first_display == False and a == old_a and b == old_b and len(obj.keys()) == len(old_obj.keys()):
         return
 
     screen.fill((200,200,200))

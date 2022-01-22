@@ -4,9 +4,10 @@ from config import (menu_dimensions,
                    menu_validate_button_margin,
                    menu_body_height,
                    menu_font,
-                   menu_text_bottom_margin)
+                   menu_text_bottom_margin
+                   )
 
-from menu.buttons import buttons, validate_button
+from menu.buttons import buttons, validate_button, scores_button
 
 
 def define_coordinates():
@@ -67,6 +68,9 @@ def define_coordinates():
                                    }
                      }
         x += text_width+menu_x_margin
+
+
+    # Defines validate button coordinates
     validate_button_text_width, validate_button_text_height = menu_font.size(validate_button["name"])
 
 
@@ -79,12 +83,31 @@ def define_coordinates():
 
     validate_button_bg_rect_params = (x_validate_button-60,y_validate_button-20,validate_button_text_width+120, validate_button_text_height+40)
 
-    locals_ = locals()
     for k in (
-                    "validate_button_text_width",
-                    "validate_button_text_height",
-                    "y_validate_button",
-                    "x_validate_button",
-                    "validate_button_bg_rect_params"
-               ):
-               validate_button[k] = locals()[k]
+               "validate_button_text_width",
+               "validate_button_text_height",
+               "y_validate_button",
+               "x_validate_button",
+               "validate_button_bg_rect_params"
+             ):
+        validate_button[k] = locals()[k]
+
+
+    # Defines button to scores coordinates
+    validate_button_bg_rect_right = validate_button_bg_rect_params[0]+validate_button_bg_rect_params[2]
+
+    scores_button_text_width,scores_button_text_height = menu_font.size(scores_button["name"])
+
+    x_scores_button = validate_button_bg_rect_right+(menu_dimensions[0]-validate_button_bg_rect_right)/2-scores_button_text_width/2
+    y_scores_button = y_validate_button
+
+    scores_button_bg_rect_params = (x_scores_button-60,y_scores_button-20,scores_button_text_width+120,scores_button_text_height+40)
+
+    for k in (
+               "scores_button_text_width",
+               "scores_button_text_height",
+               "x_scores_button",
+               "y_scores_button",
+               "scores_button_bg_rect_params"
+             ):
+        scores_button[k] = locals()[k]

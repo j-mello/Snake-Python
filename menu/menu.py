@@ -8,6 +8,8 @@ from menu.display_buttons import display_buttons
 def menu():
     screen = pygame.display.set_mode(menu_dimensions)
 
+    first_display = True
+
     define_coordinates()
 
     while True:
@@ -20,6 +22,7 @@ def menu():
                 listen_buttons(mouse)
 
             if event.type == SCREEN_UPDATE:
-                display_buttons()
+                display_buttons(first_display)
+                first_display = False
 
             mouse = pygame.mouse.get_pos()

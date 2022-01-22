@@ -1,8 +1,8 @@
 from config import menu_font
-from menu.buttons import buttons, validate_button
+from menu.buttons import buttons, validate_button, scores_button
 
 def listen_buttons(mouse):
-    for button in buttons:
+    for button in buttons: # Listen all config buttons
         text_width,text_height = menu_font.size(button["name"])
 
         settable_value_bg_rect_params, settable_value_width, settable_value_height = [button[k] for k in ('settable_value_bg_rect_params','settable_value_width', 'settable_value_height')]
@@ -32,7 +32,7 @@ def listen_buttons(mouse):
                 elif y_decrement_area-3 <= mouse[1] <= y_decrement_area+button_height_area+3:
                     button["decrement"]()
 
-
+    #Listen validate button
     (
         name,
         validate_button_text_width,
@@ -51,3 +51,24 @@ def listen_buttons(mouse):
     x_area, y_area, width_area, height_area = validate_button_bg_rect_params
     if x_area <= mouse[0] <= x_area+width_area and y_area <= mouse[1] <= y_area+height_area:
         validate_button["action"]()
+
+
+    #Listen scores button
+    (
+        name,
+        scores_button_text_width,
+        scores_button_text_height,
+        y_scores_button,
+        x_scores_button,
+        scores_button_bg_rect_params
+    ) = [scores_button[k] for k in (
+                                        "name",
+                                        "scores_button_text_width",
+                                        "scores_button_text_height",
+                                        "y_scores_button",
+                                        "x_scores_button",
+                                        "scores_button_bg_rect_params"
+                                      )]
+    x_area, y_area, width_area, height_area = scores_button_bg_rect_params
+    if x_area <= mouse[0] <= x_area+width_area and y_area <= mouse[1] <= y_area+height_area:
+        scores_button["action"]()

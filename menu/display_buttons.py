@@ -1,15 +1,13 @@
 from init import pygame, screen
 from config import menu_font
-from menu.buttons import buttons, validate_button
+from menu.buttons import buttons, validate_button, scores_button
 
-def display_buttons(): # update screen only if a value has changed
-    if all("old_value" in button and button["get"]() == button["old_value"] for button in buttons):
+def display_buttons(first_display): # update screen only if a value has changed
+    if first_display == False and all("old_value" in button and button["get"]() == button["old_value"] for button in buttons):
         return
 
-
-
     screen.fill((200,200,200))
-    for button in buttons:
+    for button in buttons: # Display all config buttons
         text = button["name"]
         text_width,text_height,x,y = [button[k] for k in ("text_width", "text_height", "x", "y")]
 
@@ -63,6 +61,9 @@ def display_buttons(): # update screen only if a value has changed
         screen.blit(surface,rect)
         screen.blit(settable_value_surface,settable_value_rect)
 
+
+    #Display validate button
+
     (
         name,
         validate_button_text_width,
@@ -87,5 +88,32 @@ def display_buttons(): # update screen only if a value has changed
     pygame.draw.rect(screen,(0,0,0),validate_button_bg_rect)
     pygame.draw.rect(screen,(255,255,255),validate_button_bg_rect, 1)
     screen.blit(validate_button_surface,validate_button_rect)
+
+
+    # Display scores button
+    (
+        name,
+        scores_button_text_width,
+        scores_button_text_height,
+        y_scores_button,
+        x_scores_button,
+        scores_button_bg_rect_params
+    ) = [scores_button[k] for k in (
+                                        "name",
+                                        "scores_button_text_width",
+                                        "scores_button_text_height",
+                                        "y_scores_button",
+                                        "x_scores_button",
+                                        "scores_button_bg_rect_params"
+                                     )]
+
+    scores_button_surface = menu_font.render(name,True,(255,255,255))
+    scores_button_rect = scores_button_surface.get_rect(center = (x_scores_button+scores_button_text_width/2, y_scores_button+scores_button_text_height/2))
+
+    scores_button_bg_rect = pygame.Rect(*scores_button_bg_rect_params)
+
+    pygame.draw.rect(screen,(0,0,0),scores_button_bg_rect)
+    pygame.draw.rect(screen,(255,255,255),scores_button_bg_rect, 1)
+    screen.blit(scores_button_surface,scores_button_rect)
 
     pygame.display.update()

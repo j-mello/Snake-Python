@@ -17,6 +17,8 @@ def scroll(a,b,obj,factor):
 def score_table():
     screen = pygame.display.set_mode(menu_dimensions)
 
+    first_display = True
+
     file_name = "scores.json"
     try:
         with open(file_name, 'r') as file:
@@ -33,7 +35,8 @@ def score_table():
                 pygame.quit()
 
             if event.type == SCREEN_UPDATE:
-                show_scores(obj,a,b)
+                show_scores(obj,a,b,first_display)
+                first_display = False
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
