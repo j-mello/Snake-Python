@@ -3,6 +3,7 @@ from PARTY import PARTY
 from elements.SNAKE import SNAKE
 from init import screen, pygame, SCREEN_UPDATE
 from config import cell_number, cell_size, config_game
+import menu.menu
 from pygame.math import Vector2
 
 def start_game():
@@ -39,3 +40,5 @@ def start_game():
                                 snake.orientation = new_direction
                 elif event.key == pygame.K_RETURN:
                     party.reset()
+                elif event.key == pygame.K_ESCAPE:
+                    menu.menu.menu()

@@ -275,16 +275,20 @@ class PARTY:
         if self.playing == False:
             sentence_font = pygame.font.SysFont("comicsansms", int(35*self.cell_number/20))
 
-            sentence_text = "Appuyez sur entrer pour recommencer"
-            sentence_height = font.size(sentence_text)[1]
+            sentence_restart_text = "Appuyez sur entrer pour recommencer"
+            sentence_restart_height = sentence_font.size(sentence_restart_text)[1]
 
-            sentence_surface = sentence_font.render(sentence_text, True, score_color)
+            sentence_restart_surface = sentence_font.render(sentence_restart_text, True, score_color)
             sentence_x = cell_size * self.cell_number / 2
-            sentence_y = cell_size * self.cell_number / 2 + sentence_height
+            sentence_restart_y = cell_size * self.cell_number / 2 + sentence_restart_height
 
-            sentence_rect = sentence_surface.get_rect(center = (sentence_x, sentence_y))
+            sentence_restart_rect = sentence_restart_surface.get_rect(center = (sentence_x, sentence_restart_y))
 
-            screen.blit(sentence_surface,sentence_rect)
+            sentence_echap_surface = sentence_font.render("Echap pour retourner au menu", True, score_color)
+            sentence_echap_rect = sentence_echap_surface.get_rect(center = (sentence_x,sentence_restart_y+sentence_restart_height+cell_size))
+
+            screen.blit(sentence_restart_surface,sentence_restart_rect)
+            screen.blit(sentence_echap_surface,sentence_echap_rect)
 
 
         nb_players = len(list(self.players.keys()))
